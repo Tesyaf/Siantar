@@ -13,7 +13,16 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                poppins: ['Poppins', 'sans-serif'],
             },
+            colors: {
+                orange: {
+                    DEFAULT: '#FF7F00',
+                    300: '#FFB366', // Perkiraan untuk focus ring
+                    500: '#FF7F00',
+                    600: '#E67300', // Untuk hover state
+                }
+            }
         },
     },
 
