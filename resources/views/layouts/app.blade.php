@@ -15,22 +15,33 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
+            
+            <!-- Sidebar -->
+            <aside class="w-64 fixed inset-y-0 left-0 bg-white shadow-md z-10">
+                @include('layouts.sidebar')
+            </aside>
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col ml-64 transition-all duration-300">
+                
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="bg-white dark:bg-gray-800 shadow">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                            <div>{{ $header }}</div>
+                            <div class="text-sm text-gray-500">
+                                {{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})
+                            </div>
+                        </div>
+                    </header>
+                @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main class="p-6">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>

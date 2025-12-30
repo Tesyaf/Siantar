@@ -16,13 +16,14 @@ export default {
                 poppins: ['Poppins', 'sans-serif'],
             },
             colors: {
+                'brand-orange': '#FF7F00',
                 orange: {
                     DEFAULT: '#FF7F00',
-                    300: '#FFB366', // Perkiraan untuk focus ring
+                    300: '#FFB366',
                     500: '#FF7F00',
-                    600: '#E67300', // Untuk hover state
+                    600: '#E67300',
                 }
-            }
+            },
         },
     },
 
