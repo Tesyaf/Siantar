@@ -15,6 +15,10 @@ Route::get('/manfaat', function () {
     return view('manfaat');
 })->name('manfaat');
 
+Route::get('/tentang', function () {
+    return view('tentang');
+})->name('tentang');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

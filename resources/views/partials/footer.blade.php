@@ -18,7 +18,7 @@
     <div>
       <p class="text-[12px] font-bold mb-1 text-white">Menu Utama</p>
       <a href="{{ route('welcome') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Beranda</a>
-      <a href="{{ route('welcome') }}#tentang" class="text-[11px] block hover:text-orange-500 text-gray-300">Tentang Sistem</a>
+      <a href="{{ route('tentang') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Tentang Sistem</a>
       <a href="{{ route('manfaat') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Manfaat</a>
       <a href="{{ route('contact') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Kontak</a>
     </div>

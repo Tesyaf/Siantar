@@ -9,7 +9,7 @@
     </div>
     <nav class="flex gap-6 text-gray-700">
       <a href="{{ route('welcome') }}" class="hover:text-orange-500 {{ request()->routeIs('welcome') ? 'font-bold text-orange-500' : '' }}">Beranda</a>
-      <a href="{{ route('welcome') }}#tentang" class="hover:text-orange-500">Tentang</a>
+      <a href="{{ route('tentang') }}" class="hover:text-orange-500 {{ request()->routeIs('tentang') ? 'font-bold text-orange-500' : '' }}">Tentang</a>
       <a href="{{ route('manfaat') }}" class="hover:text-orange-500 {{ request()->routeIs('manfaat') ? 'font-bold text-orange-500' : '' }}">Manfaat</a>
       <a href="{{ route('contact') }}" class="hover:text-orange-500 {{ request()->routeIs('contact') ? 'font-bold text-orange-500' : 'font-semibold' }}">Kontak</a>
     </nav>

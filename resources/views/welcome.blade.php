@@ -207,7 +207,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                     Masuk ke Sistem
                 </a>
-                <a href="#tentang" class="px-8 py-4 rounded-xl border-2 border-white text-white font-bold hover:bg-white/10 transition flex items-center justify-center gap-2 hover:scale-105 transform duration-300">
+                <a href="{{ route('tentang') }}" class="px-8 py-4 rounded-xl border-2 border-white text-white font-bold hover:bg-white/10 transition flex items-center justify-center gap-2 hover:scale-105 transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     Pelajari Lebih Lanjut
                 </a>
