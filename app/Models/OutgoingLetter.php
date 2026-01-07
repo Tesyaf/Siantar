@@ -11,8 +11,19 @@ class OutgoingLetter extends Model
         'letter_date',
         'recipient',
         'subject',
+        'category',
+        'summary',
+        'status',
+        'priority',
+        'file_number',
+        'instruction_number',
+        'package_number',
         'file_path',
         'user_id',
+    ];
+
+    protected $casts = [
+        'letter_date' => 'date',
     ];
 
     public function user()

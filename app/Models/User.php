@@ -48,4 +48,33 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function roleLabel(): string
+    {
+        return self::roleLabelFor($this->role);
+    }
+
+    public static function roleLabelFor(?string $role): string
+    {
+        return match ($role) {
+            'admin' => 'Admin',
+            'sekretariat' => 'Sekretariat',
+            'sekretaris' => 'Sekretaris',
+            'kepala_badan' => 'Kepala Badan',
+            default => $role ? ucfirst(str_replace('_', ' ', $role)) : '-',
+        };
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * @param array<int, string> $roles
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles, true);
+    }
 }

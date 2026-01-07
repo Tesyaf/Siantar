@@ -1,11 +1,3 @@
-@push('styles')
-<style>
-  body{border:1px solid #E5E7EB;background:#fff}
-  .shadow-soft{box-shadow:0 10px 25px rgba(0,0,0,.06)}
-  .impact-box{background:#FFF;border-left:6px solid #F59E0B;border-radius:16px}
-  .footer-bg{background:#272421}
-</style>
-@endpush
 <x-app-layout>
 <div class="bg-white">
 
@@ -30,7 +22,7 @@
 <div class="bg-gray-50 py-16 mt-16">
   <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6">
 
-    <div class="rounded-2xl p-6 text-center bg-[#FFF2DC] shadow-soft">
+    <div class="rounded-2xl p-6 text-center bg-[#FFF2DC] shadow-sm">
       <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center mx-auto mb-2 text-white">
         <i class="bi bi-leaf"></i>
       </div>
@@ -39,7 +31,7 @@
       <p class="text-[11px] text-gray-500 -mt-0.5">Bebas kertas sepenuhnya</p>
     </div>
 
-    <div class="rounded-2xl p-6 text-center bg-[#E6FFEA] shadow-soft">
+    <div class="rounded-2xl p-6 text-center bg-[#E6FFEA] shadow-sm">
       <div class="w-12 h-12 rounded-full bg-[#22C55E] flex items-center justify-center mx-auto mb-2 text-white">
         <i class="bi bi-rocket"></i>
       </div>
@@ -48,7 +40,7 @@
       <p class="text-[11px] text-gray-500 -mt-0.5">Peningkatan kecepatan proses</p>
     </div>
 
-    <div class="rounded-2xl p-6 text-center bg-[#E6F0FF] shadow-soft">
+    <div class="rounded-2xl p-6 text-center bg-[#E6F0FF] shadow-sm">
       <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 text-white">
         <i class="bi bi-shield-half"></i>
       </div>
@@ -57,7 +49,7 @@
       <p class="text-[11px] text-gray-500">Keamanan data terjamin</p>
     </div>
 
-    <div class="rounded-2xl p-6 text-center bg-[#F3E6FF] shadow-soft">
+    <div class="rounded-2xl p-6 text-center bg-[#F3E6FF] shadow-sm">
       <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-2 text-white">
         <i class="bi bi-people"></i>
       </div>
@@ -72,7 +64,7 @@
 <!-- FEATURE CARDS -->
 <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 px-6">
 
-  <div class="card shadow-soft p-6">
+  <div class="card shadow-sm p-6">
     <div class="w-9 h-9 rounded-full bg-orange-100 text-[#FF8B00] flex items-center justify-center mb-2">
       <i class="bi bi-folder2-open"></i>
     </div>
@@ -82,7 +74,7 @@
     </p>
   </div>
 
-  <div class="card shadow-soft p-6">
+  <div class="card shadow-sm p-6">
     <div class="w-9 h-9 rounded-full bg-orange-100 text-[#FF8B00] flex items-center justify-center mb-2">
       <i class="bi bi-send"></i>
     </div>
@@ -92,7 +84,7 @@
     </p>
   </div>
 
-  <div class="card shadow-soft p-6">
+  <div class="card shadow-sm p-6">
     <div class="w-9 h-9 rounded-full bg-orange-100 text-[#FF8B00] flex items-center justify-center mb-2">
       <i class="bi bi-list-check"></i>
     </div>
@@ -102,7 +94,7 @@
     </p>
   </div>
 
-  <div class="card shadow-soft p-6">
+  <div class="card shadow-sm p-6">
     <div class="w-9 h-9 rounded-full bg-orange-100 text-[#FF8B00] flex items-center justify-center mb-2">
       <i class="bi bi-lock"></i>
     </div>
@@ -117,7 +109,7 @@
 <!-- IMPACT -->
 <div class="bg-[#FFF8F0] py-16 mt-20">
   <div class="max-w-5xl mx-auto px-6">
-    <div class="impact-box p-6 shadow-soft">
+    <div class="bg-white border-l-4 border-yellow-500 rounded-3 shadow-sm p-6 shadow-sm">
       <p class="font-semibold text-[15px] text-center mb-1">Dampak & Nilai Tambah</p>
       <p class="text-[12px] text-gray-700 text-center leading-relaxed">
         Dengan penerapan SIANTAR, instansi dapat meningkatkan efisiensi kerja hingga 70%, mengurangi ketergantungan pada arsip fisik secara total,
@@ -135,7 +127,7 @@
 
 <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 px-6">
 
-  <div class="rounded-2xl shadow-soft p-6 text-center bg-[#FFF2DC]">
+  <div class="rounded-2xl shadow-sm p-6 text-center bg-[#FFF2DC]">
     <div class="w-10 h-10 mx-auto rounded-full bg-[#FF8A00] flex items-center justify-center text-white mb-3">
       <i class="bi bi-arrow-repeat text-[14px]"></i>
     </div>
@@ -143,7 +135,7 @@
     <p class="text-[11px] text-gray-500 mt-1">Mendukung transformasi digital instansi pemerintah</p>
   </div>
 
-  <div class="rounded-2xl shadow-soft p-6 text-center bg-[#E6F0FF]">
+  <div class="rounded-2xl shadow-sm p-6 text-center bg-[#E6F0FF]">
     <div class="w-10 h-10 mx-auto rounded-full bg-[#3B82F6] flex items-center justify-center text-white mb-3">
       <i class="bi bi-shield-check text-[14px]"></i>
     </div>
@@ -151,7 +143,7 @@
     <p class="text-[11px] text-gray-500 mt-1">Meminimalkan risiko kehilangan dokumen</p>
   </div>
 
-  <div class="rounded-2xl shadow-soft p-6 text-center bg-[#E6FFEA]">
+  <div class="rounded-2xl shadow-sm p-6 text-center bg-[#E6FFEA]">
     <div class="w-10 h-10 mx-auto rounded-full bg-[#22C55E] flex items-center justify-center text-white mb-3">
       <i class="bi bi-graph-up-arrow text-[14px]"></i>
     </div>
@@ -159,7 +151,7 @@
     <p class="text-[11px] text-gray-500 mt-1">Meningkatkan produktivitas pegawai</p>
   </div>
 
-  <div class="rounded-2xl shadow-soft p-6 text-center bg-[#F3E6FF]">
+  <div class="rounded-2xl shadow-sm p-6 text-center bg-[#F3E6FF]">
     <div class="w-10 h-10 mx-auto rounded-full bg-[#8B5CF6] flex items-center justify-center text-white mb-3">
       <i class="bi bi-eye text-[14px]"></i>
     </div>

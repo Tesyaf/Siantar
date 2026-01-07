@@ -24,7 +24,7 @@
                         <div class="w-full py-6 flex justify-between items-center">
                             <div>{{ $header }}</div>
                             <div class="text-sm text-gray-500">
-                                {{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})
+                                {{ Auth::user()->name }} ({{ Auth::user()->roleLabel() }})
                             </div>
                         </div>
                     </header>
@@ -41,7 +41,6 @@
         @stack('scripts')
     </body>
 </html>
-
 
 
 

@@ -1,11 +1,3 @@
-@push('styles')
-<style>
-.icon-badge{height:48px;width:48px;border-radius:999px;background:linear-gradient(180deg,#FFEED3,#FFD9AA);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
-.icon-badge i{color:#FF8B00!important;font-size:18px}
-.card-title{font-size:12px;font-weight:700;margin-bottom:4px}
-.card-text{font-size:11px;color:#6B7280;line-height:16px}
-</style>
-@endpush
 
 <x-app-layout>
 <div class="bg-white">
@@ -31,9 +23,11 @@
 <div class="bg-[#E5E7EB] mt-8 py-10">
   <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6">
     <div class="card bg-white rounded-xl border p-6 text-center">
-      <div class="icon-badge"><i class="bi bi-geo-alt-fill"></i></div>
-      <div class="card-title">Alamat Kantor</div>
-      <div class="card-text">
+      <div class="d-flex align-items-center justify-content-center rounded-circle bg-gradient-to-b from-[#FFEED3] to-[#FFD9AA] mx-auto mb-2 w-12 h-12">
+        <i class="bi bi-geo-alt-fill text-[#FF8B00] text-lg"></i>
+      </div>
+      <div class="text-xs fw-bold mb-1 text-gray-900">Alamat Kantor</div>
+      <div class="text-xs text-gray-500 leading-relaxed">
         Jl. Basuki Rahmat No.21, Gedong Pakuwon<br>
         Kec. Telukbetung Selatan<br>
         Kota Bandar Lampung<br>
@@ -41,19 +35,25 @@
       </div>
     </div>
     <div class="card bg-white rounded-xl border p-6 text-center">
-      <div class="icon-badge"><i class="bi bi-telephone-fill"></i></div>
-      <div class="card-title">Telepon</div>
-      <div class="card-text">(0721) 481544</div>
+      <div class="d-flex align-items-center justify-content-center rounded-circle bg-gradient-to-b from-[#FFEED3] to-[#FFD9AA] mx-auto mb-2 w-12 h-12">
+        <i class="bi bi-telephone-fill text-[#FF8B00] text-lg"></i>
+      </div>
+      <div class="text-xs fw-bold mb-1 text-gray-900">Telepon</div>
+      <div class="text-xs text-gray-500 leading-relaxed">(0721) 481544</div>
     </div>
     <div class="card bg-white rounded-xl border p-6 text-center">
-      <div class="icon-badge"><i class="bi bi-envelope-fill"></i></div>
-      <div class="card-title">Email</div>
-      <div class="card-text">kesbangpol@lampungprov.go.id</div>
+      <div class="d-flex align-items-center justify-content-center rounded-circle bg-gradient-to-b from-[#FFEED3] to-[#FFD9AA] mx-auto mb-2 w-12 h-12">
+        <i class="bi bi-envelope-fill text-[#FF8B00] text-lg"></i>
+      </div>
+      <div class="text-xs fw-bold mb-1 text-gray-900">Email</div>
+      <div class="text-xs text-gray-500 leading-relaxed">kesbangpol@lampungprov.go.id</div>
     </div>
     <div class="card bg-white rounded-xl border p-6 text-center">
-      <div class="icon-badge"><i class="bi bi-clock"></i></div>
-      <div class="card-title">Jam Operasional</div>
-      <div class="card-text">Senin – Jumat<br>08.00 – 16.00 WIB</div>
+      <div class="d-flex align-items-center justify-content-center rounded-circle bg-gradient-to-b from-[#FFEED3] to-[#FFD9AA] mx-auto mb-2 w-12 h-12">
+        <i class="bi bi-clock text-[#FF8B00] text-lg"></i>
+      </div>
+      <div class="text-xs fw-bold mb-1 text-gray-900">Jam Operasional</div>
+      <div class="text-xs text-gray-500 leading-relaxed">Senin - Jumat<br>08.00 - 16.00 WIB</div>
     </div>
   </div>
 </div>
@@ -98,7 +98,7 @@
 
   <div class="max-w-5xl mx-auto bg-white border rounded-xl mt-4 h-64 flex items-center justify-center text-center shadow-sm overflow-hidden">
     <!-- Using Google Maps iframe instead of placeholder icon -->
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.207857218321!2d105.2559573147651!3d-5.419478996071068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40da467440333d%3A0x6b77241245787627!2sBadan%20Kesatuan%20Bangsa%20dan%20Politik%20Provinsi%20Lampung!5e0!3m2!1sid!2sid!4v1646278832567!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.207857218321!2d105.2559573147651!3d-5.419478996071068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40da467440333d%3A0x6b77241245787627!2sBadan%20Kesatuan%20Bangsa%20dan%20Politik%20Provinsi%20Lampung!5e0!3m2!1sid!2sid!4v1646278832567!5m2!1sid!2sid" width="100%" height="100%" class="border-0" allowfullscreen="" loading="lazy"></iframe>
   </div>
 </div>
 
@@ -111,7 +111,6 @@
 
 </div>
 </x-app-layout>
-
 
 
 

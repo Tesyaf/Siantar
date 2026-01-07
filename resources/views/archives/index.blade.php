@@ -32,7 +32,7 @@
                 <td>
                     <a href="{{ route('archives.show', $archive) }}" class="btn btn-sm btn-info">Lihat</a>
                     <a href="{{ route('archives.edit', $archive) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('archives.destroy', $archive) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus arsip ini?')">
+                    <form action="{{ route('archives.destroy', $archive) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus arsip ini?')">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-sm btn-danger">Hapus</button>
@@ -50,6 +50,5 @@
     {{ $archives->links() }}
 </div>
 @endsection
-
 
 

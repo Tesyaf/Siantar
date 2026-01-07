@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\ArchiveSearchController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IncomingLetterController;
+use App\Http\Controllers\OutgoingLetterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,41 +24,35 @@ Route::get('/tentang', function () {
     return view('tentang');
 })->name('tentang');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/surat-masuk', function () {
-    return view('surat-masuk.index');
-})->middleware(['auth', 'verified'])->name('surat-masuk.index');
+    Route::get('/surat-masuk', [IncomingLetterController::class, 'index'])->name('surat-masuk.index');
+    Route::post('/surat-masuk', [IncomingLetterController::class, 'store'])->name('surat-masuk.store');
+    Route::get('/tambah-surat-masuk', [IncomingLetterController::class, 'create'])->name('tambah-surat-masuk');
+    Route::get('/detail-surat-masuk/{incomingLetter}', [IncomingLetterController::class, 'show'])->name('detail-surat-masuk');
+    Route::get('/surat-masuk/{incomingLetter}/download', [IncomingLetterController::class, 'download'])->name('surat-masuk.download');
+    Route::patch('/surat-masuk/{incomingLetter}/instruksi', [IncomingLetterController::class, 'updateInstruction'])->name('surat-masuk.instruction');
+    Route::patch('/surat-masuk/{incomingLetter}/arahan-final', [IncomingLetterController::class, 'updateFinalDirection'])->name('surat-masuk.final-direction');
 
-Route::get('/surat-keluar', function () {
-    return view('surat-keluar.index');
-})->middleware(['auth', 'verified'])->name('surat-keluar.index');
+    Route::get('/surat-keluar', [OutgoingLetterController::class, 'index'])->name('surat-keluar.index');
+    Route::post('/surat-keluar', [OutgoingLetterController::class, 'store'])->name('surat-keluar.store');
+    Route::get('/tambah-surat-keluar', [OutgoingLetterController::class, 'create'])->name('tambah-surat-keluar');
+    Route::get('/detail-surat-keluar/{outgoingLetter}', [OutgoingLetterController::class, 'show'])->name('detail-surat-keluar');
+    Route::get('/surat-keluar/{outgoingLetter}/download', [OutgoingLetterController::class, 'download'])->name('surat-keluar.download');
 
-Route::get('/tambah-surat', function () {
-    return view('tambah-surat');
-})->middleware(['auth', 'verified'])->name('tambah-surat');
+    Route::get('/tambah-surat', function () {
+        if (!request()->user()->hasAnyRole(['sekretariat', 'admin'])) {
+            abort(403);
+        }
 
-Route::get('/tambah-surat-masuk', function () {
-    return view('tambah-surat-masuk');
-})->middleware(['auth', 'verified'])->name('tambah-surat-masuk');
+        return view('tambah-surat');
+    })->name('tambah-surat');
 
-Route::get('/tambah-surat-keluar', function () {
-    return view('tambah-surat-keluar');
-})->middleware(['auth', 'verified'])->name('tambah-surat-keluar');
+    Route::get('/cari-arsip', [ArchiveSearchController::class, 'index'])->name('cari-arsip');
 
-Route::get('/cari-arsip', function () {
-    return view('cari-arsip');
-})->middleware(['auth', 'verified'])->name('cari-arsip');
-
-Route::get('/detail-surat-masuk', function () {
-    return view('detail-surat-masuk');
-})->middleware(['auth', 'verified'])->name('detail-surat-masuk');
-
-Route::get('/detail-surat-keluar', function () {
-    return view('detail-surat-keluar');
-})->middleware(['auth', 'verified'])->name('detail-surat-keluar');
+    Route::resource('archives', ArchiveController::class);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
