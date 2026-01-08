@@ -17,10 +17,10 @@
     </div>
     <div>
       <p class="text-[12px] font-bold mb-1 text-white">Menu Utama</p>
-      <a href="{{ route('welcome') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Beranda</a>
-      <a href="{{ route('tentang') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Tentang Sistem</a>
-      <a href="{{ route('manfaat') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Manfaat</a>
-      <a href="{{ route('contact') }}" class="text-[11px] block hover:text-orange-500 text-gray-300">Kontak</a>
+      <a href="{{ route('welcome') }}" class="text-[11px] block hover:text-orange-500 text-gray-300 text-decoration-none">Beranda</a>
+      <a href="{{ route('tentang') }}" class="text-[11px] block hover:text-orange-500 text-gray-300 text-decoration-none">Tentang Sistem</a>
+      <a href="{{ route('manfaat') }}" class="text-[11px] block hover:text-orange-500 text-gray-300 text-decoration-none">Manfaat</a>
+      <a href="{{ route('contact') }}" class="text-[11px] block hover:text-orange-500 text-gray-300 text-decoration-none">Kontak</a>
     </div>
     <div>
       <p class="text-[12px] font-bold mb-1 text-white">Layanan</p>
@@ -30,7 +30,7 @@
       <p class="text-[11px]">Laporan</p>
     </div>
     <div>
-      <p class="text-[11px] font-bold mb-1 text-white">Kontak Kami</p>
+      <p class="text-[12px] font-bold mb-1 text-white">Kontak Kami</p>
       <p class="text-[11px] flex gap-2"><i class="bi bi-geo-alt-fill text-orange-500 mt-0.5"></i>Jl. Dokter Susilo No. 2, Kota Bandar Lampung</p>
       <p class="text-[11px] flex gap-2 mt-1"><i class="bi bi-telephone-fill text-orange-500"></i>(0721) 481544</p>
       <p class="text-[11px] flex gap-2 mt-1"><i class="bi bi-envelope-fill text-orange-500"></i>kesbangpol@lampungprov.go.id</p>

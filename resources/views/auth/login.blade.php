@@ -76,7 +76,7 @@
                 </form>
 
                 <p class="text-sm text-gray-600 mt-6">
-                    Belum memiliki akun? <a href="{{ route('register') }}" class="font-bold text-orange hover:text-orange-600">Daftar</a>
+                    Belum memiliki akun? <a href="{{ route('contact') }}" class="font-bold text-orange hover:text-orange-600">Hubungi admin</a>
                 </p>
 
                 <div class="mt-4 flex justify-center">
@@ -106,7 +106,6 @@
         </script>
     </div>
 </x-app-layout>
-
 
 
 

@@ -166,8 +166,8 @@
   <p class="font-bold text-lg">Sistem Terintegrasi untuk Administrasi</p>
   <p class="font-bold text-lg -mt-1">Modern</p>
   <div class="flex justify-center gap-4 mt-4">
-    <a href="{{ route('register') }}" class="bg-orange-500 text-white text-[12px] px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-orange-600 transition">
-      <i class="bi bi-play-fill"></i> Mulai Sekarang
+    <a href="{{ route('contact') }}" class="bg-orange-500 text-white text-[12px] px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-orange-600 transition">
+      <i class="bi bi-envelope"></i> Hubungi Admin
     </a>
     <a href="{{ route('welcome') }}#tentang" class="border border-gray-400 text-[12px] px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition">
       <i class="bi bi-book"></i> Pelajari SIANTAR
@@ -177,7 +177,6 @@
 
 </div>
 </x-app-layout>
-
 
 
 

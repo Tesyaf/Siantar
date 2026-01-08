@@ -23,13 +23,9 @@
             </p>
 
             <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" class="flex flex-col sm:flex-row justify-center gap-5">
-                <a href="{{ route('login') }}" class="px-8 py-4 rounded-xl bg-brand-orange text-white font-bold text-sm hover:opacity-90 transition shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-2 transform hover:scale-105 duration-300">
+                <a href="{{ route('login') }}" class="px-8 py-4 rounded-xl bg-brand-orange text-white font-bold text-sm hover:opacity-90 transition shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-2 transform hover:scale-105 duration-300 text-decoration-none">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                     Masuk ke Sistem
-                </a>
-                <a href="{{ route('register') }}" class="px-8 py-4 rounded-xl bg-white text-brand-orange font-bold text-sm hover:bg-gray-50 transition shadow-xl flex items-center justify-center gap-2 transform hover:scale-105 duration-300">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
-                    Daftar Akun
                 </a>
             </div>
 
@@ -183,11 +179,11 @@
             <h2 class="text-4xl font-bold mb-6">Mulai Gunakan SIANTAR Sekarang</h2>
             <p class="text-xl text-orange-100 mb-10 max-w-2xl mx-auto">Tingkatkan efisiensi pengelolaan persuratan dan pengarsipan di instansi Anda.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="{{ route('login') }}" class="px-8 py-4 rounded-xl bg-white text-brand-orange font-bold hover:bg-gray-100 transition shadow-xl flex items-center justify-center gap-2 hover:scale-105 transform duration-300">
+                <a href="{{ route('login') }}" class="px-8 py-4 rounded-xl bg-white text-brand-orange font-bold hover:bg-gray-100 transition shadow-xl flex items-center justify-center gap-2 hover:scale-105 transform duration-300 text-decoration-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                     Masuk ke Sistem
                 </a>
-                <a href="{{ route('tentang') }}" class="px-8 py-4 rounded-xl border-2 border-white text-white font-bold hover:bg-white/10 transition flex items-center justify-center gap-2 hover:scale-105 transform duration-300">
+                <a href="{{ route('tentang') }}" class="px-8 py-4 rounded-xl border-2 border-white text-white font-bold hover:bg-white/10 transition flex items-center justify-center gap-2 hover:scale-105 transform duration-300 text-decoration-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     Pelajari Lebih Lanjut
                 </a>
@@ -197,8 +193,6 @@
 
 </div>
 </x-app-layout>
-
-
 
 
 

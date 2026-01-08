@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\IncomingLetter;
+use App\Models\OutgoingLetter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +18,26 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        // Get statistics for profile display
+        $incomingTotal = IncomingLetter::count();
+        $outgoingTotal = OutgoingLetter::count();
+        $pendingApproval = IncomingLetter::whereIn('status', ['Baru', 'Menunggu'])->count();
+        $inProgress = IncomingLetter::whereIn('status', ['Diproses'])->count();
+        $incomingProcessed = IncomingLetter::whereIn('status', ['Diproses', 'Selesai'])->count();
+        $pendingLetters = IncomingLetter::whereIn('status', ['Baru', 'Menunggu'])->count();
+        $archivedCount = IncomingLetter::where('status', 'Selesai')->count();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'incomingTotal' => $incomingTotal,
+            'outgoingTotal' => $outgoingTotal,
+            'pendingApproval' => $pendingApproval,
+            'inProgress' => $inProgress,
+            'incomingProcessed' => $incomingProcessed,
+            'pendingLetters' => $pendingLetters,
+            'archivedCount' => $archivedCount,
         ]);
     }
 

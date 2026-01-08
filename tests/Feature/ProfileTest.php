@@ -83,3 +83,14 @@ test('correct password must be provided to delete account', function () {
 
     $this->assertNotNull($user->fresh());
 });
+
+test('header shows profile link and logout for authenticated users', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->get('/profile');
+
+    $response->assertSee('href="' . route('profile.edit') . '"', false);
+    $response->assertSee('Keluar');
+});
