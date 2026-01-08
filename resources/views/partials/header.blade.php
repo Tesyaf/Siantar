@@ -27,11 +27,11 @@
     </nav>
     <div class="flex items-center gap-4">
       @auth
-        <div class="relative">
-            <i class="bi bi-bell text-gray-700"></i>
-            <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] rounded-full px-1.5">3</span>
-        </div>
-        <a href="{{ route('dashboard') }}" class="text-gray-700 text-decoration-none hover:text-orange-500">
+        <a href="{{ route('notifikasi.index') }}" class="relative text-decoration-none group">
+            <i class="bi bi-bell text-gray-700 group-hover:text-orange-500 transition"></i>
+            <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] rounded-full px-1.5 border border-white">3</span>
+        </a>
+        <a href="{{ route('pengaturan.index') }}" class="text-gray-700 text-decoration-none hover:text-orange-500">
             <i class="bi bi-gear text-gray-700"></i>
         </a>
         <div class="flex items-center gap-2">

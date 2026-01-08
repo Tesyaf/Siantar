@@ -51,6 +51,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/cari-arsip', [ArchiveSearchController::class, 'index'])->name('cari-arsip');
 
+    Route::get('/notifikasi', function () {
+        return view('surat-masuk.notifikasi');
+    })->name('notifikasi.index');
+
+    Route::get('/pengaturan', function () {
+        return view('surat-masuk.pengaturan');
+    })->name('pengaturan.index');
+
     Route::resource('archives', ArchiveController::class);
 });
 
