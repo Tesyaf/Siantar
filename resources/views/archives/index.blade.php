@@ -8,7 +8,12 @@
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('archives.create') }}" class="btn btn-primary mb-3">Buat Arsip Baru</a>
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ route('archives.create') }}" class="btn btn-primary">Buat Arsip Baru</a>
+        <a href="{{ route('laporan.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-file-earmark-bar-graph me-1"></i> Buat Laporan
+        </a>
+    </div>
 
     <table class="table table-striped">
         <thead>
@@ -50,5 +55,3 @@
     {{ $archives->links() }}
 </div>
 @endsection
-
-

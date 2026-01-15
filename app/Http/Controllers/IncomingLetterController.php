@@ -32,8 +32,10 @@ class IncomingLetterController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        if ($request->filled('date')) {
-            $query->whereDate('received_date', $request->input('date'));
+        if ($request->filled('month')) {
+            $month = $request->input('month'); // Format: YYYY-MM
+            $query->whereYear('received_date', substr($month, 0, 4))
+                ->whereMonth('received_date', substr($month, 5, 2));
         }
 
         $letters = $query->paginate(10)->withQueryString();
@@ -93,6 +95,9 @@ class IncomingLetterController extends Controller
             $mimeType = $file->getMimeType();
             $fileSize = $file->getSize();
 
+            // TEMPORARILY DISABLED: Google Drive upload untuk presentasi
+            // Uncomment blok di bawah ini untuk mengaktifkan kembali Google Drive
+            /*
             // Coba upload ke Google Drive terlebih dahulu
             if ($this->googleDrive->isConfigured()) {
                 try {
@@ -118,6 +123,10 @@ class IncomingLetterController extends Controller
                 // Local storage jika Google Drive tidak dikonfigurasi
                 $this->storeFileLocally($file, $data);
             }
+            */
+
+            // Sementara langsung simpan ke local storage
+            $this->storeFileLocally($file, $data);
         }
 
         IncomingLetter::create($data);
@@ -180,6 +189,61 @@ class IncomingLetterController extends Controller
         return view('detail-surat-masuk', compact('incomingLetter', 'attachment'));
     }
 
+    public function edit(Request $request, IncomingLetter $incomingLetter)
+    {
+        if (!$request->user()->hasAnyRole(['sekretariat', 'admin'])) {
+            abort(403);
+        }
+
+        $attachment = $this->buildAttachment($incomingLetter);
+
+        return view('edit-surat-masuk', compact('incomingLetter', 'attachment'));
+    }
+
+    public function update(Request $request, IncomingLetter $incomingLetter)
+    {
+        if (!$request->user()->hasAnyRole(['sekretariat', 'admin'])) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'letter_number' => ['required', 'string', 'max:100'],
+            'sender' => ['required', 'string', 'max:255'],
+            'letter_date' => ['required', 'date'],
+            'received_date' => ['required', 'date'],
+            'subject' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'string', 'max:100'],
+            'summary' => ['nullable', 'string'],
+            'status' => ['nullable', 'string', 'in:Baru,Menunggu,Diproses,Selesai'],
+            'index_code' => ['nullable', 'string', 'max:100'],
+            'reference_letter_date' => ['nullable', 'date'],
+            'reference_letter_number' => ['nullable', 'string', 'max:100'],
+            'instruction_number' => ['nullable', 'string', 'max:100'],
+            'package_number' => ['nullable', 'string', 'max:100'],
+            'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx', 'max:20480'],
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            // Hapus file lama jika ada
+            if ($incomingLetter->file_path) {
+                $oldDisk = Storage::disk($incomingLetter->storage_disk ?? $this->lettersDiskName());
+                if ($oldDisk->exists($incomingLetter->file_path)) {
+                    $oldDisk->delete($incomingLetter->file_path);
+                }
+            }
+
+            // Simpan file baru ke local storage
+            $this->storeFileLocally($file, $data);
+        }
+
+        $incomingLetter->update($data);
+
+        return redirect()->route('detail-surat-masuk', $incomingLetter)
+            ->with('success', 'Surat masuk berhasil diperbarui.');
+    }
+
     public function download(IncomingLetter $incomingLetter)
     {
         // Jika file disimpan di Google Drive
@@ -197,6 +261,36 @@ class IncomingLetterController extends Controller
         }
 
         return $this->streamDownload($disk, $incomingLetter->file_path);
+    }
+
+    public function preview(IncomingLetter $incomingLetter)
+    {
+        // Jika file disimpan di Google Drive
+        if ($incomingLetter->gdrive_file_id) {
+            $previewUrl = $this->googleDrive->getPreviewUrl($incomingLetter->gdrive_file_id);
+            return redirect()->away($previewUrl);
+        }
+
+        // Fallback ke local storage
+        $diskName = $incomingLetter->storage_disk ?? $this->lettersDiskName();
+        $disk = Storage::disk($diskName);
+
+        if (!$incomingLetter->file_path || !$disk->exists($incomingLetter->file_path)) {
+            return back()->with('error', 'File tidak ditemukan.');
+        }
+
+        $mimeType = $incomingLetter->file_mime ?? 'application/octet-stream';
+        $stream = $disk->readStream($incomingLetter->file_path);
+
+        return response()->stream(function () use ($stream) {
+            fpassthru($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+        }, 200, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . ($incomingLetter->original_filename ?? basename($incomingLetter->file_path)) . '"',
+        ]);
     }
 
     private function buildAttachment(IncomingLetter $letter): ?array
@@ -231,6 +325,7 @@ class IncomingLetterController extends Controller
             'name' => $letter->original_filename ?? basename($path),
             'size' => $this->formatBytes($size),
             'url' => route('surat-masuk.download', $letter),
+            'preview_url' => route('surat-masuk.preview', $letter),
             'is_gdrive' => false,
             'mime_type' => $letter->file_mime,
         ];

@@ -20,7 +20,7 @@
   ['id' => 'create', 'icon' => 'bi-file-earmark-plus', 'title' => 'Buat Surat Baru', 'desc' => 'Buat surat keluar baru', 'href' => route('tambah-surat')],
   ['id' => 'incoming', 'icon' => 'bi-inbox', 'title' => 'Input Surat Masuk', 'desc' => 'Catat surat masuk baru', 'href' => route('tambah-surat-masuk')],
   ['id' => 'archives', 'icon' => 'bi-search', 'title' => 'Arsip Digital', 'desc' => 'Telusuri arsip surat', 'href' => route('cari-arsip')],
-  ['id' => 'reports', 'icon' => 'bi-bar-chart', 'title' => 'Lihat Laporan', 'desc' => 'Statistik dan laporan', 'href' => route('surat-masuk.index')],
+  ['id' => 'reports', 'icon' => 'bi-bar-chart', 'title' => 'Lihat Laporan', 'desc' => 'Statistik dan laporan', 'href' => route('laporan.index')],
   ];
 
   if (!$canInputLetter) {

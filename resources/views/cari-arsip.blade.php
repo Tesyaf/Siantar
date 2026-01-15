@@ -21,9 +21,14 @@
         <i class="bi bi-arrow-left"></i> Kembali ke Beranda
       </a>
 
-      <div class="text-center mt-6 mb-6">
-        <h1 class="text-2xl font-extrabold text-gray-900">Arsip Digital</h1>
-        <p class="text-gray-500 text-sm mt-1">Telusuri arsip surat masuk dan surat keluar dengan mudah</p>
+      <div class="flex items-center justify-between mt-6 mb-6">
+        <div class="text-center flex-1">
+          <h1 class="text-2xl font-extrabold text-gray-900">Arsip Digital</h1>
+          <p class="text-gray-500 text-sm mt-1">Telusuri arsip surat masuk dan surat keluar dengan mudah</p>
+        </div>
+        <a href="{{ route('laporan.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition no-underline">
+          <i class="bi bi-file-earmark-bar-graph"></i> Buat Laporan
+        </a>
       </div>
 
       <form x-data="{ loading: false }" x-ref="filterForm" method="GET" action="{{ route('cari-arsip') }}">

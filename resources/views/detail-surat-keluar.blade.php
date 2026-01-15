@@ -26,7 +26,11 @@
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">{{ $outgoingLetter->category }}</span>
             @endif
           </div>
-          <button class="p-2 rounded-lg hover:bg-gray-100 text-gray-500" aria-label="menu"><i class="bi bi-three-dots-vertical"></i></button>
+          @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
+          <a href="{{ route('surat-keluar.edit', $outgoingLetter) }}" class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition no-underline">
+            <i class="bi bi-pencil-square me-2"></i> Edit Surat
+          </a>
+          @endif
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -111,6 +115,20 @@
           <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Preview Dokumen</div>
           <div class="w-full rounded-xl overflow-hidden border border-gray-200" style="height: 600px;">
             <iframe src="{{ $attachment['preview_url'] }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+        @elseif (empty($attachment['is_gdrive']) && !empty($attachment['preview_url']) && $isPreviewable)
+        {{-- Preview File Lokal --}}
+        <div class="mt-4">
+          <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Preview Dokumen</div>
+          <div class="w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50" style="height: 600px;">
+            @if ($extension === 'pdf')
+            <object data="{{ $attachment['preview_url'] }}" type="application/pdf" class="w-full h-full">
+              <p class="p-4 text-center text-gray-500">Browser tidak mendukung preview PDF. <a href="{{ $attachment['preview_url'] }}" target="_blank" class="text-orange-500 hover:underline">Klik di sini untuk melihat</a></p>
+            </object>
+            @else
+            <img src="{{ $attachment['preview_url'] }}" alt="Preview" class="w-full h-full object-contain">
+            @endif
           </div>
         </div>
         @endif
