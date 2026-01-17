@@ -86,3 +86,44 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: deploy.zip
+
+      - name: Parse publish profile
+        id: publish-profile
+        env:
+          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+
+          xml_text = os.environ["AZURE_WEBAPP_PUBLISH_PROFILE"]
+          root = ET.fromstring(xml_text)
+          profile = root.find("./publishProfile")
+          if profile is None:
+              raise SystemExit("publishProfile not found in profile XML")
+
+          user = profile.get("userName", "")
+          password = profile.get("userPWD", "")
+          publish_url = profile.get("publishUrl", "")
+          if publish_url.endswith(":443"):
+              publish_url = publish_url[:-4]
+
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as fh:
+              fh.write(f"user={user}\n")
+              fh.write(f"password={password}\n")
+              fh.write(f"scm={publish_url}\n")
+          PY
+
+      - name: Run Laravel post-deploy commands
+        env:
+          KUDU_USER: ${{ steps.publish-profile.outputs.user }}
+          KUDU_PASS: ${{ steps.publish-profile.outputs.password }}
+          KUDU_SCM: ${{ steps.publish-profile.outputs.scm }}
+        shell: bash
+        run: |
+          curl -sS --fail -X POST -u "$KUDU_USER:$KUDU_PASS" \
+            "https://$KUDU_SCM/api/command" \
+            -H "Content-Type: application/json" \
+            -d '{"command":"php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force","dir":"/home/site/wwwroot"}'
