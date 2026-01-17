@@ -56,6 +56,8 @@ jobs:
         run: |
           mkdir -p deploy
           rsync -av --exclude='node_modules' --exclude='.git' --exclude='tests' --exclude='.env' --exclude='*.md' --exclude='.github' --exclude='storage/logs/*' --exclude='storage/framework/cache/data/*' --exclude='storage/framework/sessions/*' --exclude='storage/framework/views/*' --exclude='deploy.zip' . deploy/
+          # Pastikan startup.sh selalu ada di deploy
+          cp startup.sh deploy/startup.sh
           cd deploy && zip -r ../deploy.zip .
 
       - name: Upload artifact for deployment
