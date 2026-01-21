@@ -1,12 +1,12 @@
 <header class="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 text-[12px]">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 text-[14px]">
     <a href="{{ route('welcome') }}" class="flex items-center gap-3 no-underline group">
       <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
         <img src="{{ asset('image/logo.png') }}" class="w-7 h-7">
       </div>
       <div class="leading-tight">
-        <span class="font-bold text-gray-900 text-sm tracking-wide">SIANTAR</span><br>
-        <span class="text-[10px] text-gray-500 font-medium">Kesbangpol</span>
+        <span class="font-bold text-gray-900 text-base tracking-wide">SIANTAR</span><br>
+        <span class="text-xs text-gray-500 font-medium">Kesbangpol</span>
       </div>
     </a>
 
@@ -15,17 +15,17 @@
       @php
       $canInputLetter = Auth::user()->hasAnyRole(['sekretariat', 'admin']);
       @endphp
-      <a href="{{ route('dashboard') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('dashboard') ? '!text-orange-500 !font-bold' : '' }}">Beranda</a>
-      <a href="{{ route('surat-masuk.index') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('surat-masuk.index') ? '!text-orange-500 !font-bold' : '' }}">Surat Masuk</a>
-      <a href="{{ route('surat-keluar.index') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('surat-keluar.index') ? '!text-orange-500 !font-bold' : '' }}">Surat Keluar</a>
-      <a href="{{ route('cari-arsip') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('cari-arsip') ? '!text-orange-500 !font-bold' : '' }}">Arsip</a>
+      <a href="{{ route('dashboard') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('dashboard') ? '!text-orange-500 !font-semibold' : '' }}">Beranda</a>
+      <a href="{{ route('surat-masuk.index') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('surat-masuk.index') ? '!text-orange-500 !font-semibold' : '' }}">Surat Masuk</a>
+      <a href="{{ route('surat-keluar.index') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('surat-keluar.index') ? '!text-orange-500 !font-semibold' : '' }}">Surat Keluar</a>
+      <a href="{{ route('cari-arsip') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('cari-arsip') ? '!text-orange-500 !font-semibold' : '' }}">Arsip</a>
       @if ($canInputLetter)
-      <a href="{{ route('tambah-surat') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('tambah-surat') ? '!text-orange-500 !font-bold' : '' }}">Tambah Surat</a>
+      <a href="{{ route('tambah-surat') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('tambah-surat') ? '!text-orange-500 !font-semibold' : '' }}">Tambah Surat</a>
       @endif
       @else
-      <a href="{{ route('tentang') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('tentang') ? '!text-orange-500 !font-bold' : '' }}">Tentang</a>
-      <a href="{{ route('manfaat') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('manfaat') ? '!text-orange-500 !font-bold' : '' }}">Manfaat</a>
-      <a href="{{ route('contact') }}" class="no-underline font-medium text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('contact') ? '!text-orange-500 !font-bold' : '' }}">Kontak</a>
+      <a href="{{ route('tentang') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('tentang') ? '!text-orange-500 !font-semibold' : '' }}">Tentang</a>
+      <a href="{{ route('manfaat') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('manfaat') ? '!text-orange-500 !font-semibold' : '' }}">Manfaat</a>
+      <a href="{{ route('contact') }}" class="no-underline text-[16px] font-normal text-gray-600 hover:text-orange-500 transition-colors {{ request()->routeIs('contact') ? '!text-orange-500 !font-semibold' : '' }}">Kontak</a>
       @endauth
     </nav>
 
@@ -37,8 +37,8 @@
           {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
         </div>
         <div class="leading-tight hidden lg:block">
-          <span class="text-sm font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">{{ Auth::user()->name }}</span><br>
-          <span class="text-[10px] text-gray-500">{{ Auth::user()->roleLabel() }}</span>
+          <span class="text-base font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">{{ Auth::user()->name }}</span><br>
+          <span class="text-xs text-gray-500">{{ Auth::user()->roleLabel() }}</span>
         </div>
       </a>
 

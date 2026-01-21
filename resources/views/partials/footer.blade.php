@@ -41,7 +41,7 @@
         </p>
         <p class="text-[12px] flex gap-3 text-gray-400">
           <i class="bi bi-telephone-fill text-orange-400"></i>
-          <span>(0721) 481544</span>
+          <span>(0721) 476838</span>
         </p>
         <p class="text-[12px] flex gap-3 text-gray-400">
           <i class="bi bi-envelope-fill text-orange-400"></i>

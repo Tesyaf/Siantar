@@ -66,16 +66,40 @@
     <section class="card border-0 shadow-sm mt-4">
       <div class="card-body p-0 p-lg-3">
         <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
+          <table class="table table-hover align-middle mb-0" data-sortable>
             <thead class="table-light">
               <tr>
-                <th class="min-w-[200px]">Nama</th>
-                <th class="min-w-[160px]">Username</th>
-                <th class="min-w-[220px]">Email</th>
-                <th class="min-w-[160px]">Role</th>
-                <th class="min-w-[140px]">NIP</th>
-                <th class="min-w-[140px]">Dibuat</th>
-                <th class="min-w-[160px] text-center">Aksi</th>
+                <th class="min-w-[200px]" data-sortable-col>
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    Nama <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[160px]" data-sortable-col>
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    Username <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[220px]" data-sortable-col>
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    Email <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[160px]" data-sortable-col>
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    Role <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[140px]" data-sortable-col data-sort-type="number">
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    NIP <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[140px]" data-sortable-col data-sort-type="date">
+                  <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                    Dibuat <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="min-w-[160px] text-center text-muted"></th>
               </tr>
             </thead>
             <tbody>
@@ -95,7 +119,7 @@
                   </span>
                 </td>
                 <td class="text-muted">{{ $user->nip ?? '-' }}</td>
-                <td class="text-muted">{{ optional($user->created_at)->format('d M Y') }}</td>
+                <td class="text-muted" data-sort-value="{{ optional($user->created_at)->format('Y-m-d') }}">{{ optional($user->created_at)->format('d M Y') }}</td>
                 <td class="text-center">
                   <div class="d-inline-flex gap-2">
                     <a class="btn btn-sm fw-bold !text-white !bg-orange-500 hover:!bg-orange-600 !border-0" href="{{ route('admin.users.edit', $user) }}">Edit</a>

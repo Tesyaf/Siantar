@@ -46,7 +46,7 @@
       </div>
       <p class="font-bold text-gray-900 mb-2">Surat Masuk</p>
       <p class="text-sm text-gray-600">
-        Pendaftaran dan pelacakan surat masuk secara digital dengan dukungan sistem disposisi serta pemantauan status surat secara real-time.
+        Pendaftaran surat masuk secara digital dengan dukungan sistem disposisi dan notifikasi real-time.
       </p>
     </div>
 
@@ -56,7 +56,7 @@
       </div>
       <p class="font-bold text-gray-900 mb-2">Surat Keluar</p>
       <p class="text-sm text-gray-600">
-        Pembuatan dan pengiriman surat keluar dengan alur persetujuan bertingkat serta fitur pemantauan status pengiriman surat.
+        Pembuatan dan pengiriman surat keluar dengan alur persetujuan bertingkat.
       </p>
     </div>
 

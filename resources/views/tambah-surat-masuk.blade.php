@@ -24,8 +24,17 @@
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="letter_number" value="{{ old('letter_number') }}" placeholder="Masukkan nomor surat" required />
             </div>
             <div>
+              <label class="block text-xs font-bold text-gray-700 mb-2">No Index <span class="text-red-500">*</span></label>
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="number" min="1" name="index_no" value="{{ old('index_no', $nextIndexNo) }}" placeholder="Nomor index" required />
+            </div>
+            <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Pengirim <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="sender" value="{{ old('sender') }}" placeholder="Nama instansi/organisasi pengirim" required />
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="sender" value="{{ old('sender') }}" placeholder="Nama instansi/organisasi pengirim" list="sender-options" required />
+              <datalist id="sender-options">
+                @foreach ($senderOptions ?? [] as $senderOption)
+                <option value="{{ $senderOption }}"></option>
+                @endforeach
+              </datalist>
             </div>
 
             <div>
@@ -34,7 +43,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Diterima <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="received_date" value="{{ old('received_date') }}" required />
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="received_date" value="{{ old('received_date', $defaultReceivedDate->format('Y-m-d')) }}" required />
             </div>
 
             <div>
@@ -43,12 +52,19 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span class="text-red-500">*</span></label>
-              <select class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="category">
-                <option value="" selected>Pilih kategori surat</option>
-                <option>Undangan</option>
-                <option>Laporan</option>
-                <option>Permohonan</option>
-              </select>
+              <div class="relative">
+                <input id="category-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-10" name="category" value="{{ old('category') }}" placeholder="Pilih atau ketik kategori surat" autocomplete="off" required />
+                <button type="button" id="category-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition" aria-label="Tampilkan daftar kategori">
+                  <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="category-dropdown" class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
+                  @foreach ($categories as $category)
+                    <button type="button" class="category-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                      {{ $category }}
+                    </button>
+                  @endforeach
+                </div>
+              </div>
             </div>
 
             <div class="md:col-span-2">
@@ -62,33 +78,6 @@
               <div class="text-gray-400 text-xs flex items-center gap-2 mt-2"><i class="bi bi-info-circle"></i> Ringkasan isi surat digunakan sebagai gambaran umum isi dokumen.</div>
             </div>
 
-            <div class="md:col-span-2 mt-2">
-              <div class="font-bold text-gray-700 text-sm">Data Tambahan</div>
-              <div class="text-gray-400 text-xs">Kolom opsional digunakan jika data tersedia, dapat dikosongkan bila tidak ada.</div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Berkas <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="index_code" value="{{ old('index_code') }}" placeholder="Masukkan nomor berkas" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Dari Surat Masuk - Tanggal <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="reference_letter_date" value="{{ old('reference_letter_date') }}" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Dari Surat Masuk - Nomor <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="reference_letter_number" value="{{ old('reference_letter_number') }}" placeholder="Masukkan nomor surat referensi" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Petunjuk <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="instruction_number" value="{{ old('instruction_number') }}" placeholder="Masukkan nomor petunjuk" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Paket <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="package_number" value="{{ old('package_number') }}" placeholder="Masukkan nomor paket" />
-            </div>
           </div>
         </section>
 
@@ -153,6 +142,40 @@
 
     </main>
   </div>
+  <script>
+    (() => {
+      const indexInput = document.querySelector('input[name="index_no"]');
+      const receivedInput = document.querySelector('input[name="received_date"]');
+      const indexNoByYear = @json($indexNoByYear ?? []);
+      if (!indexInput || !receivedInput) {
+        return;
+      }
+
+      let manualIndexChange = false;
+      const updateIndex = () => {
+        const value = receivedInput.value;
+        if (!value) return;
+        const year = new Date(value).getFullYear();
+        if (!Number.isFinite(year)) return;
+        const nextIndex = (indexNoByYear[year] ?? 0) + 1;
+        indexInput.value = nextIndex;
+      };
+
+      indexInput.addEventListener('input', () => {
+        manualIndexChange = true;
+      });
+      receivedInput.addEventListener('input', () => {
+        if (!manualIndexChange) {
+          updateIndex();
+        }
+      });
+      receivedInput.addEventListener('change', () => {
+        if (!manualIndexChange) {
+          updateIndex();
+        }
+      });
+    })();
+  </script>
   <script>
     (() => {
       const uploadCards = document.querySelectorAll('[data-upload]');
@@ -346,6 +369,63 @@
           input.value = '';
         }
       }
+    })();
+  </script>
+  <script>
+    (() => {
+      const input = document.getElementById('category-input');
+      const toggle = document.getElementById('category-toggle');
+      const dropdown = document.getElementById('category-dropdown');
+      const options = Array.from(document.querySelectorAll('.category-option'));
+
+      if (!input || !toggle || !dropdown || options.length === 0) {
+        return;
+      }
+
+      const normalize = (value) => value.trim().toLowerCase();
+      const filterOptions = (value) => {
+        const needle = normalize(value);
+        let visibleCount = 0;
+        options.forEach((option) => {
+          const match = normalize(option.textContent || '').includes(needle);
+          option.classList.toggle('hidden', !match);
+          if (match) visibleCount += 1;
+        });
+        dropdown.classList.toggle('hidden', visibleCount === 0);
+      };
+
+      const openDropdown = () => {
+        filterOptions(input.value);
+        dropdown.classList.remove('hidden');
+      };
+
+      const closeDropdown = () => {
+        dropdown.classList.add('hidden');
+      };
+
+      toggle.addEventListener('click', () => {
+        if (dropdown.classList.contains('hidden')) {
+          openDropdown();
+        } else {
+          closeDropdown();
+        }
+      });
+
+      input.addEventListener('focus', openDropdown);
+      input.addEventListener('input', () => filterOptions(input.value));
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          input.value = option.textContent.trim();
+          closeDropdown();
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!dropdown.contains(event.target) && !input.contains(event.target) && !toggle.contains(event.target)) {
+          closeDropdown();
+        }
+      });
     })();
   </script>
 

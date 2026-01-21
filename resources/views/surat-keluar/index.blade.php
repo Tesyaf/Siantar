@@ -1,13 +1,4 @@
 <x-app-layout>
-  @php
-  $statusClasses = [
-  'Menunggu' => 'badge rounded-pill bg-amber-500 text-white font-bold',
-  'Diproses' => 'badge rounded-pill bg-orange-500 text-white font-bold',
-  'Terkirim' => 'badge rounded-pill bg-blue-500 text-white font-bold',
-  'Selesai' => 'badge rounded-pill bg-green-500 text-white font-bold',
-  ];
-  @endphp
-
   <div class="min-h-screen bg-[#f5f7fb]">
     <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
 
@@ -25,7 +16,7 @@
       <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm mb-4">{{ session('error') }}</div>
       @endif
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
         <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
           <div>
             <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Total Surat Keluar</div>
@@ -33,24 +24,6 @@
           </div>
           <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
             <i class="bi bi-send-fill text-orange-500 text-xl"></i>
-          </div>
-        </div>
-        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
-          <div>
-            <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Menunggu Persetujuan</div>
-            <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $stats['pending'] }}</div>
-          </div>
-          <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center">
-            <i class="bi bi-clock-fill text-amber-500 text-xl"></i>
-          </div>
-        </div>
-        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
-          <div>
-            <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Sudah Dikirim</div>
-            <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $stats['sent'] }}</div>
-          </div>
-          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
-            <i class="bi bi-check-circle-fill text-green-500 text-xl"></i>
           </div>
         </div>
       </div>
@@ -65,19 +38,10 @@
             </div>
           </div>
           <div class="md:col-span-3">
-            <label class="block text-xs font-bold text-gray-700 mb-2">Status</label>
-            <select x-on:change="loading = true; $refs.filterForm.submit()" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="status">
-              <option value="">Semua Status</option>
-              @foreach ($statusOptions as $status)
-              <option value="{{ $status }}" @selected(request('status')===$status)>{{ $status }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="md:col-span-2">
             <label class="block text-xs font-bold text-gray-700 mb-2">Bulan</label>
             <input x-on:change="loading = true; $refs.filterForm.submit()" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="month" name="month" value="{{ request('month') }}" />
           </div>
-          <div class="md:col-span-2 flex items-end">
+          <div class="md:col-span-4 flex items-end">
             <a :class="{ 'opacity-50 pointer-events-none': loading }" class="w-full text-center bg-gray-100 text-gray-700 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-200 transition text-sm no-underline" href="{{ route('surat-keluar.index') }}">
               <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
             </a>
@@ -91,28 +55,45 @@
 
       <section class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table class="w-full text-sm" data-sortable>
             <thead>
               <tr class="bg-gray-50 text-left">
-                <th class="py-4 px-5 font-bold text-gray-700 min-w-[140px]">Nomor Surat</th>
-                <th class="py-4 px-5 font-bold text-gray-700 min-w-[120px]">Tanggal</th>
-                <th class="py-4 px-5 font-bold text-gray-700 min-w-[160px]">Penerima</th>
-                <th class="py-4 px-5 font-bold text-gray-700">Perihal</th>
-                <th class="py-4 px-5 font-bold text-gray-700 text-center min-w-[120px]">Status</th>
-                <th class="py-4 px-5 font-bold text-gray-700 text-center min-w-[130px]">Aksi</th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[110px]" data-sortable-col data-sort-type="number">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    No Index <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[140px]" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Nomor Surat <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[120px]" data-sortable-col data-sort-type="date">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Tanggal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[160px]" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Penerima <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Perihal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-400 text-center min-w-[130px]"></th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
               @forelse ($letters as $letter)
-              @php
-              $status = $letter->status ?? 'Menunggu';
-              @endphp
               <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="if(!event.target.closest('.action-menu')) window.location='{{ route('detail-surat-keluar', $letter) }}'">
+                <td class="py-4 px-5 text-gray-600">{{ $letter->index_no ?? '-' }}</td>
                 <td class="py-4 px-5 font-bold text-gray-900">{{ $letter->letter_number }}</td>
-                <td class="py-4 px-5 text-gray-500">{{ optional($letter->letter_date)->format('d M Y') }}</td>
+                <td class="py-4 px-5 text-gray-500" data-sort-value="{{ optional($letter->letter_date)->format('Y-m-d') }}">{{ optional($letter->letter_date)->format('d M Y') }}</td>
                 <td class="py-4 px-5 text-gray-500">{{ $letter->recipient }}</td>
                 <td class="py-4 px-5 text-gray-600">{{ $letter->subject }}</td>
-                <td class="py-4 px-5 text-center"><span class="{{ $statusClasses[$status] ?? $statusClasses['Menunggu'] }}">{{ $status }}</span></td>
                 <td class="py-4 px-5 text-center">
                   <div x-data="{ open: false }" class="relative inline-block action-menu">
                     <button @click="open = !open" @click.outside="open = false" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">

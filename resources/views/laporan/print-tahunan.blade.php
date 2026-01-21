@@ -111,6 +111,21 @@
             font-weight: bold;
         }
 
+        .sort-button {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .sort-indicator {
+            color: #888;
+            font-size: 10px;
+            margin-left: 6px;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -192,34 +207,46 @@
                 <div class="label">Total Surat</div>
                 <div class="value">{{ $incomingStats['total'] + $outgoingStats['total'] }}</div>
             </div>
-            <div class="stat-box">
-                <div class="label">Selesai</div>
-                <div class="value">{{ $incomingStats['selesai'] + $outgoingStats['selesai'] }}</div>
-            </div>
         </div>
     </div>
 
     <div class="section">
         <div class="section-title">Ringkasan per Bulan</div>
-        <table>
+        <table data-sortable>
             <tr>
-                <th>Bulan</th>
-                <th class="text-center">Surat Masuk</th>
-                <th class="text-center">Surat Keluar</th>
-                <th class="text-center">Total</th>
+                <th data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        Bulan <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        Surat Masuk <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        Surat Keluar <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        Total <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
             </tr>
             @php
             $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
             @endphp
             @for ($i = 1; $i <= 12; $i++)
                 <tr>
-                <td>{{ $months[$i - 1] }}</td>
+                <td data-sort-value="{{ $i }}">{{ $months[$i - 1] }}</td>
                 <td class="text-center">{{ $incomingByMonth[$i] ?? 0 }}</td>
                 <td class="text-center">{{ $outgoingByMonth[$i] ?? 0 }}</td>
                 <td class="text-center">{{ ($incomingByMonth[$i] ?? 0) + ($outgoingByMonth[$i] ?? 0) }}</td>
                 </tr>
                 @endfor
-                <tr class="total-row">
+                <tr class="total-row" data-no-sort="true">
                     <td>Total</td>
                     <td class="text-center">{{ $incomingStats['total'] }}</td>
                     <td class="text-center">{{ $outgoingStats['total'] }}</td>
@@ -230,73 +257,19 @@
 
     <div class="two-columns">
         <div class="section">
-            <div class="section-title">Status Surat Masuk</div>
-            <table>
-                <tr>
-                    <th>Status</th>
-                    <th class="text-center">Jumlah</th>
-                </tr>
-                <tr>
-                    <td>Baru</td>
-                    <td class="text-center">{{ $incomingStats['baru'] }}</td>
-                </tr>
-                <tr>
-                    <td>Menunggu</td>
-                    <td class="text-center">{{ $incomingStats['menunggu'] }}</td>
-                </tr>
-                <tr>
-                    <td>Diproses</td>
-                    <td class="text-center">{{ $incomingStats['diproses'] }}</td>
-                </tr>
-                <tr>
-                    <td>Selesai</td>
-                    <td class="text-center">{{ $incomingStats['selesai'] }}</td>
-                </tr>
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td class="text-center">{{ $incomingStats['total'] }}</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section">
-            <div class="section-title">Status Surat Keluar</div>
-            <table>
-                <tr>
-                    <th>Status</th>
-                    <th class="text-center">Jumlah</th>
-                </tr>
-                <tr>
-                    <td>Menunggu</td>
-                    <td class="text-center">{{ $outgoingStats['menunggu'] }}</td>
-                </tr>
-                <tr>
-                    <td>Diproses</td>
-                    <td class="text-center">{{ $outgoingStats['diproses'] }}</td>
-                </tr>
-                <tr>
-                    <td>Terkirim</td>
-                    <td class="text-center">{{ $outgoingStats['terkirim'] }}</td>
-                </tr>
-                <tr>
-                    <td>Selesai</td>
-                    <td class="text-center">{{ $outgoingStats['selesai'] }}</td>
-                </tr>
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td class="text-center">{{ $outgoingStats['total'] }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="two-columns">
-        <div class="section">
             <div class="section-title">Kategori Surat Masuk</div>
-            <table>
+            <table data-sortable>
                 <tr>
-                    <th>Kategori</th>
-                    <th class="text-center">Jumlah</th>
+                    <th data-sortable-col>
+                        <button type="button" class="sort-button" data-sort-button>
+                            Kategori <span class="sort-indicator" data-sort-indicator>↕</span>
+                        </button>
+                    </th>
+                    <th class="text-center" data-sortable-col data-sort-type="number">
+                        <button type="button" class="sort-button" data-sort-button>
+                            Jumlah <span class="sort-indicator" data-sort-indicator>↕</span>
+                        </button>
+                    </th>
                 </tr>
                 @forelse ($incomingByCategory as $category => $count)
                 <tr>
@@ -304,7 +277,7 @@
                     <td class="text-center">{{ $count }}</td>
                 </tr>
                 @empty
-                <tr>
+                <tr data-no-sort="true">
                     <td colspan="2" class="text-center">Tidak ada data</td>
                 </tr>
                 @endforelse
@@ -313,10 +286,18 @@
 
         <div class="section">
             <div class="section-title">Kategori Surat Keluar</div>
-            <table>
+            <table data-sortable>
                 <tr>
-                    <th>Kategori</th>
-                    <th class="text-center">Jumlah</th>
+                    <th data-sortable-col>
+                        <button type="button" class="sort-button" data-sort-button>
+                            Kategori <span class="sort-indicator" data-sort-indicator>↕</span>
+                        </button>
+                    </th>
+                    <th class="text-center" data-sortable-col data-sort-type="number">
+                        <button type="button" class="sort-button" data-sort-button>
+                            Jumlah <span class="sort-indicator" data-sort-indicator>↕</span>
+                        </button>
+                    </th>
                 </tr>
                 @forelse ($outgoingByCategory as $category => $count)
                 <tr>
@@ -324,7 +305,7 @@
                     <td class="text-center">{{ $count }}</td>
                 </tr>
                 @empty
-                <tr>
+                <tr data-no-sort="true">
                     <td colspan="2" class="text-center">Tidak ada data</td>
                 </tr>
                 @endforelse
@@ -334,12 +315,28 @@
 
     <div class="section">
         <div class="section-title">Perbandingan dengan Tahun Sebelumnya ({{ $year - 1 }})</div>
-        <table>
+        <table data-sortable>
             <tr>
-                <th>Jenis Surat</th>
-                <th class="text-center">{{ $year - 1 }}</th>
-                <th class="text-center">{{ $year }}</th>
-                <th class="text-center">Perubahan</th>
+                <th data-sortable-col>
+                    <button type="button" class="sort-button" data-sort-button>
+                        Jenis Surat <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        {{ $year - 1 }} <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        {{ $year }} <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-center" data-sortable-col data-sort-type="number">
+                    <button type="button" class="sort-button" data-sort-button>
+                        Perubahan <span class="sort-indicator" data-sort-indicator>↕</span>
+                    </button>
+                </th>
             </tr>
             <tr>
                 <td>Surat Masuk</td>
@@ -380,6 +377,172 @@
             <p>(_______________________)</p>
         </div>
     </div>
+    <script>
+        (() => {
+            const monthMap = {
+                jan: 0,
+                januari: 0,
+                feb: 1,
+                februari: 1,
+                mar: 2,
+                maret: 2,
+                apr: 3,
+                april: 3,
+                mei: 4,
+                may: 4,
+                jun: 5,
+                juni: 5,
+                jul: 6,
+                juli: 6,
+                agu: 7,
+                ags: 7,
+                agustus: 7,
+                sep: 8,
+                sept: 8,
+                september: 8,
+                okt: 9,
+                oktober: 9,
+                oct: 9,
+                nov: 10,
+                november: 10,
+                des: 11,
+                desember: 11,
+                dec: 11,
+            };
+
+            const parseDateValue = (value) => {
+                if (!value) {
+                    return NaN;
+                }
+                const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+                if (isoMatch) {
+                    return new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T00:00:00`).getTime();
+                }
+                const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (slashMatch) {
+                    const day = Number(slashMatch[1]);
+                    const month = Number(slashMatch[2]) - 1;
+                    const year = Number(slashMatch[3]);
+                    return new Date(year, month, day).getTime();
+                }
+                const parts = value.trim().split(/\s+/);
+                if (parts.length >= 3) {
+                    const day = Number(parts[0]);
+                    const monthKey = parts[1].toLowerCase();
+                    const year = Number(parts[2]);
+                    const month = monthMap[monthKey];
+                    if (!Number.isNaN(day) && !Number.isNaN(year) && month !== undefined) {
+                        return new Date(year, month, day).getTime();
+                    }
+                }
+                return NaN;
+            };
+
+            const parseCellValue = (cell, type) => {
+                const rawValue = cell.dataset.sortValue ?? cell.textContent.trim();
+                if (type === 'number') {
+                    const normalized = rawValue.replace(/[^\d.\-]/g, '');
+                    const value = Number.parseFloat(normalized);
+                    return Number.isNaN(value) ? null : value;
+                }
+                if (type === 'date') {
+                    const value = parseDateValue(rawValue);
+                    return Number.isNaN(value) ? null : value;
+                }
+                return rawValue.toLowerCase();
+            };
+
+            const sortTable = (table, columnIndex, direction, type) => {
+                const tbody = table.tBodies[0];
+                if (!tbody) {
+                    return;
+                }
+
+                const rows = Array.from(tbody.rows);
+                const sortableRows = [];
+                const staticRows = [];
+
+                rows.forEach((row) => {
+                    if (row.dataset.noSort === 'true') {
+                        staticRows.push(row);
+                        return;
+                    }
+                    const onlyCell = row.cells.length === 1 && row.cells[0]?.colSpan > 1;
+                    if (onlyCell) {
+                        staticRows.push(row);
+                        return;
+                    }
+                    sortableRows.push(row);
+                });
+
+                sortableRows.sort((a, b) => {
+                    const aCell = a.cells[columnIndex];
+                    const bCell = b.cells[columnIndex];
+                    if (!aCell || !bCell) {
+                        return 0;
+                    }
+                    const aVal = parseCellValue(aCell, type);
+                    const bVal = parseCellValue(bCell, type);
+                    const aNull = aVal === null || aVal === '';
+                    const bNull = bVal === null || bVal === '';
+
+                    if (aNull && bNull) {
+                        return 0;
+                    }
+                    if (aNull) {
+                        return 1;
+                    }
+                    if (bNull) {
+                        return -1;
+                    }
+                    if (typeof aVal === 'number' && typeof bVal === 'number') {
+                        return aVal - bVal;
+                    }
+                    return String(aVal).localeCompare(String(bVal), 'id', {
+                        numeric: true,
+                        sensitivity: 'base',
+                    });
+                });
+
+                if (direction === 'desc') {
+                    sortableRows.reverse();
+                }
+
+                tbody.innerHTML = '';
+                sortableRows.forEach((row) => tbody.appendChild(row));
+                staticRows.forEach((row) => tbody.appendChild(row));
+            };
+
+            document.querySelectorAll('table[data-sortable]').forEach((table) => {
+                const headers = table.querySelectorAll('th[data-sortable-col]');
+                headers.forEach((header) => {
+                    const button = header.querySelector('[data-sort-button]') ?? header;
+                    button.addEventListener('click', () => {
+                        const currentDirection = header.dataset.sortDirection === 'asc' ? 'asc' : 'desc';
+                        const nextDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+                        headers.forEach((th) => {
+                            th.dataset.sortDirection = '';
+                            th.setAttribute('aria-sort', 'none');
+                            const indicator = th.querySelector('[data-sort-indicator]');
+                            if (indicator) {
+                                indicator.textContent = '↕';
+                            }
+                        });
+                        header.dataset.sortDirection = nextDirection;
+                        header.setAttribute('aria-sort', nextDirection === 'asc' ? 'ascending' : 'descending');
+
+                        const indicator = header.querySelector('[data-sort-indicator]');
+                        if (indicator) {
+                            indicator.textContent = nextDirection === 'asc' ? '↑' : '↓';
+                        }
+
+                        const type = header.dataset.sortType || 'string';
+                        sortTable(table, header.cellIndex, nextDirection, type);
+                    });
+                });
+            });
+        })();
+    </script>
 </body>
 
 </html>

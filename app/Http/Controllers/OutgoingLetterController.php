@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\OutgoingLetter;
 use App\Services\GoogleDriveService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class OutgoingLetterController extends Controller
@@ -25,10 +27,6 @@ class OutgoingLetterController extends Controller
             });
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
         if ($request->filled('month')) {
             $month = $request->input('month'); // Format: YYYY-MM
             $query->whereYear('letter_date', substr($month, 0, 4))
@@ -39,13 +37,9 @@ class OutgoingLetterController extends Controller
 
         $stats = [
             'total' => OutgoingLetter::count(),
-            'pending' => OutgoingLetter::where('status', 'Menunggu')->count(),
-            'sent' => OutgoingLetter::whereIn('status', ['Terkirim', 'Selesai'])->count(),
         ];
 
-        $statusOptions = ['Menunggu', 'Diproses', 'Terkirim', 'Selesai'];
-
-        return view('surat-keluar.index', compact('letters', 'stats', 'statusOptions'));
+        return view('surat-keluar.index', compact('letters', 'stats'));
     }
 
     public function create(Request $request)
@@ -54,7 +48,48 @@ class OutgoingLetterController extends Controller
             abort(403);
         }
 
-        return view('tambah-surat-keluar');
+        $defaultReceivedDate = Carbon::today();
+        $indexYear = $defaultReceivedDate->year;
+        $nextIndexNo = (OutgoingLetter::query()
+            ->whereYear('received_date', $indexYear)
+            ->max('index_no') ?? 0) + 1;
+
+        $defaultCategories = ['Undangan', 'Laporan', 'Permohonan'];
+        $storedCategories = OutgoingLetter::query()
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->all();
+
+        $indexNoByYear = OutgoingLetter::query()
+            ->selectRaw('YEAR(received_date) as year, MAX(index_no) as max_index')
+            ->whereNotNull('received_date')
+            ->groupBy('year')
+            ->pluck('max_index', 'year')
+            ->all();
+
+        $categories = [];
+        $seen = [];
+        foreach (array_merge($defaultCategories, $storedCategories) as $category) {
+            $key = mb_strtolower(trim($category));
+            if ($key === '' || isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
+            $categories[] = $category;
+        }
+
+        $recipientOptions = OutgoingLetter::query()
+            ->whereNotNull('recipient')
+            ->where('recipient', '!=', '')
+            ->distinct()
+            ->orderBy('recipient')
+            ->pluck('recipient')
+            ->all();
+
+        return view('tambah-surat-keluar', compact('categories', 'nextIndexNo', 'defaultReceivedDate', 'indexNoByYear', 'recipientOptions'));
     }
 
     public function store(Request $request)
@@ -67,10 +102,11 @@ class OutgoingLetterController extends Controller
             'letter_number' => ['required', 'string', 'max:100'],
             'recipient' => ['required', 'string', 'max:255'],
             'letter_date' => ['required', 'date'],
+            'received_date' => ['required', 'date'],
             'subject' => ['required', 'string', 'max:255'],
+            'index_no' => ['required', 'integer', 'min:1'],
             'category' => ['nullable', 'string', 'max:100'],
             'summary' => ['nullable', 'string'],
-            'status' => ['nullable', 'string', 'in:Menunggu,Diproses,Terkirim,Selesai'],
             'priority' => ['nullable', 'string', 'in:Biasa,Penting,Rahasia'],
             'file_number' => ['nullable', 'string', 'max:100'],
             'instruction_number' => ['nullable', 'string', 'max:100'],
@@ -79,8 +115,11 @@ class OutgoingLetterController extends Controller
             'custom_filename' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $data['status'] = $data['status'] ?? 'Menunggu';
         $data['user_id'] = $request->user()->id;
+
+        $receivedDate = Carbon::parse($data['received_date']);
+        $indexYear = $receivedDate->year;
+        $indexNo = (int) $data['index_no'];
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -128,7 +167,16 @@ class OutgoingLetterController extends Controller
         // Remove custom_filename from data as it's not a database column
         unset($data['custom_filename']);
 
-        OutgoingLetter::create($data);
+        DB::transaction(function () use (&$data, $indexNo, $indexYear) {
+            OutgoingLetter::query()
+                ->whereYear('received_date', $indexYear)
+                ->whereNotNull('index_no')
+                ->where('index_no', '>=', $indexNo)
+                ->increment('index_no');
+
+            $data['index_no'] = $indexNo;
+            OutgoingLetter::create($data);
+        });
 
         return redirect()->route('surat-keluar.index')->with('success', 'Surat keluar berhasil disimpan.');
     }
@@ -148,7 +196,22 @@ class OutgoingLetterController extends Controller
 
         $attachment = $this->buildAttachment($outgoingLetter);
 
-        return view('edit-surat-keluar', compact('outgoingLetter', 'attachment'));
+        $indexNoByYear = OutgoingLetter::query()
+            ->selectRaw('YEAR(received_date) as year, MAX(index_no) as max_index')
+            ->whereNotNull('received_date')
+            ->groupBy('year')
+            ->pluck('max_index', 'year')
+            ->all();
+
+        $recipientOptions = OutgoingLetter::query()
+            ->whereNotNull('recipient')
+            ->where('recipient', '!=', '')
+            ->distinct()
+            ->orderBy('recipient')
+            ->pluck('recipient')
+            ->all();
+
+        return view('edit-surat-keluar', compact('outgoingLetter', 'attachment', 'indexNoByYear', 'recipientOptions'));
     }
 
     public function update(Request $request, OutgoingLetter $outgoingLetter)
@@ -161,10 +224,11 @@ class OutgoingLetterController extends Controller
             'letter_number' => ['required', 'string', 'max:100'],
             'recipient' => ['required', 'string', 'max:255'],
             'letter_date' => ['required', 'date'],
+            'received_date' => ['required', 'date'],
             'subject' => ['required', 'string', 'max:255'],
+            'index_no' => ['required', 'integer', 'min:1'],
             'category' => ['nullable', 'string', 'max:100'],
             'summary' => ['nullable', 'string'],
-            'status' => ['nullable', 'string', 'in:Menunggu,Diproses,Terkirim,Selesai'],
             'priority' => ['nullable', 'string', 'in:Biasa,Penting,Rahasia'],
             'file_number' => ['nullable', 'string', 'max:100'],
             'instruction_number' => ['nullable', 'string', 'max:100'],
@@ -187,7 +251,36 @@ class OutgoingLetterController extends Controller
             $this->storeFileLocally($file, $data);
         }
 
-        $outgoingLetter->update($data);
+        $oldIndexNo = $outgoingLetter->index_no;
+        $oldYear = $outgoingLetter->received_date
+            ? Carbon::parse($outgoingLetter->received_date)->year
+            : null;
+
+        $newReceivedDate = Carbon::parse($data['received_date']);
+        $newYear = $newReceivedDate->year;
+        $newIndexNo = (int) $data['index_no'];
+
+        DB::transaction(function () use ($outgoingLetter, $data, $oldIndexNo, $oldYear, $newIndexNo, $newYear) {
+            if ($oldIndexNo && $oldYear !== null && ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo)) {
+                OutgoingLetter::query()
+                    ->whereYear('received_date', $oldYear)
+                    ->whereNotNull('index_no')
+                    ->where('index_no', '>', $oldIndexNo)
+                    ->decrement('index_no');
+            }
+
+            if ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo) {
+                OutgoingLetter::query()
+                    ->whereYear('received_date', $newYear)
+                    ->whereNotNull('index_no')
+                    ->where('index_no', '>=', $newIndexNo)
+                    ->where('id', '!=', $outgoingLetter->id)
+                    ->increment('index_no');
+            }
+
+            $data['index_no'] = $newIndexNo;
+            $outgoingLetter->update($data);
+        });
 
         return redirect()->route('detail-surat-keluar', $outgoingLetter)
             ->with('success', 'Surat keluar berhasil diperbarui.');

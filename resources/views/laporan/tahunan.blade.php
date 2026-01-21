@@ -31,7 +31,7 @@
             </div>
 
             <!-- Statistik Utama -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
                     <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Surat Masuk</div>
                     <div class="text-3xl font-extrabold text-orange-500 mt-1">{{ $incomingStats['total'] }}</div>
@@ -56,10 +56,6 @@
                     <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Total Surat</div>
                     <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $incomingStats['total'] + $outgoingStats['total'] }}</div>
                 </div>
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-                    <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Selesai Diproses</div>
-                    <div class="text-3xl font-extrabold text-green-500 mt-1">{{ $incomingStats['selesai'] + $outgoingStats['selesai'] }}</div>
-                </div>
             </div>
 
             <!-- Grafik per Bulan -->
@@ -67,24 +63,6 @@
                 <h3 class="font-bold text-gray-900 mb-4">Grafik Surat per Bulan</h3>
                 <div class="h-72">
                     <canvas id="monthlyChart"></canvas>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Status Surat Masuk -->
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <h3 class="font-bold text-gray-900 mb-4">Status Surat Masuk</h3>
-                    <div class="h-48">
-                        <canvas id="incomingStatusChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Status Surat Keluar -->
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <h3 class="font-bold text-gray-900 mb-4">Status Surat Keluar</h3>
-                    <div class="h-48">
-                        <canvas id="outgoingStatusChart"></canvas>
-                    </div>
                 </div>
             </div>
 
@@ -128,13 +106,29 @@
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
                 <h3 class="font-bold text-gray-900 mb-4">Ringkasan per Bulan</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm" data-sortable>
                         <thead class="border-b border-gray-200">
                             <tr>
-                                <th class="text-left py-3 px-4 font-bold text-gray-600">Bulan</th>
-                                <th class="text-center py-3 px-4 font-bold text-gray-600">Surat Masuk</th>
-                                <th class="text-center py-3 px-4 font-bold text-gray-600">Surat Keluar</th>
-                                <th class="text-center py-3 px-4 font-bold text-gray-600">Total</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-600" data-sortable-col data-sort-type="number">
+                                    <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                        Bulan <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                    </button>
+                                </th>
+                                <th class="text-center py-3 px-4 font-bold text-gray-600" data-sortable-col data-sort-type="number">
+                                    <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                        Surat Masuk <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                    </button>
+                                </th>
+                                <th class="text-center py-3 px-4 font-bold text-gray-600" data-sortable-col data-sort-type="number">
+                                    <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                        Surat Keluar <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                    </button>
+                                </th>
+                                <th class="text-center py-3 px-4 font-bold text-gray-600" data-sortable-col data-sort-type="number">
+                                    <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                        Total <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -143,13 +137,13 @@
                             @endphp
                             @for ($i = 1; $i <= 12; $i++)
                                 <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-4 text-gray-900">{{ $months[$i - 1] }}</td>
+                                <td class="py-3 px-4 text-gray-900" data-sort-value="{{ $i }}">{{ $months[$i - 1] }}</td>
                                 <td class="py-3 px-4 text-center text-orange-600 font-semibold">{{ $incomingByMonth[$i] ?? 0 }}</td>
                                 <td class="py-3 px-4 text-center text-blue-600 font-semibold">{{ $outgoingByMonth[$i] ?? 0 }}</td>
                                 <td class="py-3 px-4 text-center text-gray-900 font-bold">{{ ($incomingByMonth[$i] ?? 0) + ($outgoingByMonth[$i] ?? 0) }}</td>
                                 </tr>
                                 @endfor
-                                <tr class="bg-gray-50 font-bold">
+                                <tr class="bg-gray-50 font-bold" data-no-sort="true">
                                     <td class="py-3 px-4 text-gray-900">Total</td>
                                     <td class="py-3 px-4 text-center text-orange-600">{{ $incomingStats['total'] }}</td>
                                     <td class="py-3 px-4 text-center text-blue-600">{{ $outgoingStats['total'] }}</td>
@@ -211,87 +205,6 @@
             }
         });
 
-        // Incoming Status Pie Chart
-        new Chart(document.getElementById('incomingStatusChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Baru', 'Menunggu', 'Diproses', 'Selesai'],
-                datasets: [{
-                    data: [{
-                            {
-                                $incomingStats['baru']
-                            }
-                        },
-                        {
-                            {
-                                $incomingStats['menunggu']
-                            }
-                        },
-                        {
-                            {
-                                $incomingStats['diproses']
-                            }
-                        },
-                        {
-                            {
-                                $incomingStats['selesai']
-                            }
-                        }
-                    ],
-                    backgroundColor: ['#3b82f6', '#f59e0b', '#f97316', '#22c55e'],
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                }
-            }
-        });
-
-        // Outgoing Status Pie Chart
-        new Chart(document.getElementById('outgoingStatusChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Menunggu', 'Diproses', 'Terkirim', 'Selesai'],
-                datasets: [{
-                    data: [{
-                            {
-                                $outgoingStats['menunggu']
-                            }
-                        },
-                        {
-                            {
-                                $outgoingStats['diproses']
-                            }
-                        },
-                        {
-                            {
-                                $outgoingStats['terkirim']
-                            }
-                        },
-                        {
-                            {
-                                $outgoingStats['selesai']
-                            }
-                        }
-                    ],
-                    backgroundColor: ['#f59e0b', '#f97316', '#3b82f6', '#22c55e'],
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                }
-            }
-        });
     </script>
     @endpush
 </x-app-layout>

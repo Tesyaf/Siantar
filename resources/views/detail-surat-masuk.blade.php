@@ -1,17 +1,7 @@
 <x-app-layout>
   @php
-  $status = $incomingLetter->status ?? 'Baru';
-  $statusClass = match ($status) {
-  'Baru' => 'bg-blue-100 text-blue-700 border border-blue-200',
-  'Menunggu' => 'bg-amber-100 text-amber-700 border border-amber-200',
-  'Diproses' => 'bg-orange-100 text-orange-700 border border-orange-200',
-  'Selesai' => 'bg-green-100 text-green-700 border border-green-200',
-  default => 'bg-gray-100 text-gray-700 border border-gray-200',
-  };
-  $canInputInstruction = auth()->user()->hasAnyRole(['sekretariat', 'admin'])
-  && $incomingLetter->status !== 'Selesai';
-  $canInputFinal = auth()->user()->hasAnyRole(['admin'])
-  && $incomingLetter->status !== 'Selesai';
+  $canInputInstruction = auth()->user()->hasAnyRole(['sekretariat', 'admin']);
+  $canInputFinal = auth()->user()->hasAnyRole(['admin']);
   @endphp
   <div class="min-h-screen bg-[#f5f7fb]">
     <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
@@ -31,12 +21,11 @@
 
       <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
         <div class="flex items-start justify-between flex-wrap gap-3 mb-5">
+          @if ($incomingLetter->category)
           <div class="flex gap-2 flex-wrap">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ $statusClass }}">{{ $status }}</span>
-            @if ($incomingLetter->category)
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">{{ $incomingLetter->category }}</span>
-            @endif
           </div>
+          @endif
           @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
           <div class="flex gap-2">
             <a href="{{ route('surat-masuk.edit', $incomingLetter) }}" class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition no-underline">
@@ -54,6 +43,10 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">No Index</div>
+            <div class="font-bold text-gray-900">{{ $incomingLetter->index_no ?? '-' }}</div>
+          </div>
           <div>
             <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Nomor Surat</div>
             <div class="font-bold text-gray-900">{{ $incomingLetter->letter_number }}</div>
@@ -149,18 +142,22 @@
           </span>
           Arahan Final
         </div>
-        @if ($incomingLetter->status === 'Selesai')
-        <div class="text-gray-500 text-sm">Surat sudah selesai diproses.</div>
-        @error('final_direction')
-        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-        @enderror
-        <div class="flex justify-end">
-          <button class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition" type="submit">
-            <i class="bi bi-check-circle me-2"></i> Tandai Selesai
-          </button>
-        </div>
+        <form method="POST" action="{{ route('surat-masuk.final-direction', $incomingLetter) }}">
+          @csrf
+          @method('PATCH')
+          <div class="mb-4">
+            <label class="block text-xs font-bold text-gray-700 mb-2">Arahan Final</label>
+            <textarea class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="final_direction" rows="4" placeholder="Tuliskan arahan final..." required>{{ old('final_direction', $incomingLetter->final_direction) }}</textarea>
+            @error('final_direction')
+            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+            @enderror
+          </div>
+          <div class="flex justify-end">
+            <button class="inline-flex items-center px-5 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 shadow-orange transition" type="submit">
+              <i class="bi bi-send me-2"></i> Simpan Arahan Final
+            </button>
+          </div>
         </form>
-        @endif
       </section>
       @endif
 

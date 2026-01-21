@@ -27,9 +27,7 @@
           </div>
           <div class="text-sm font-bold mb-2 text-gray-900">Alamat Kantor</div>
           <div class="text-sm text-gray-500 leading-relaxed">
-            Jl. Basuki Rahmat No.21<br>
-            Gedong Pakuwon, Telukbetung Selatan<br>
-            Bandar Lampung, 35211
+            Jl. Dokter Susilo No. 2, Kota Bandar Lampung
           </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-6 text-center shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300">
@@ -37,7 +35,7 @@
             <i class="bi bi-telephone-fill text-orange-500 text-xl"></i>
           </div>
           <div class="text-sm font-bold mb-2 text-gray-900">Telepon</div>
-          <div class="text-sm text-gray-500">(0721) 481544</div>
+          <div class="text-sm text-gray-500">(0721) 476838</div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-6 text-center shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300">
           <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">

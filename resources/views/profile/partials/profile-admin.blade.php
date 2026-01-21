@@ -65,7 +65,7 @@
     </div>
 
     <!-- System Statistics -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
             <p class="text-xs font-medium text-blue-600">Total Surat Masuk</p>
             <p class="text-2xl font-bold text-blue-900 mt-2">{{ $incomingTotal ?? 0 }}</p>
@@ -73,14 +73,6 @@
         <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
             <p class="text-xs font-medium text-green-600">Total Surat Keluar</p>
             <p class="text-2xl font-bold text-green-900 mt-2">{{ $outgoingTotal ?? 0 }}</p>
-        </div>
-        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4">
-            <p class="text-xs font-medium text-red-600">Belum Diproses</p>
-            <p class="text-2xl font-bold text-red-900 mt-2">{{ $pendingLetters ?? 0 }}</p>
-        </div>
-        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4">
-            <p class="text-xs font-medium text-purple-600">Arsip Digital</p>
-            <p class="text-2xl font-bold text-purple-900 mt-2">{{ $archivedCount ?? 0 }}</p>
         </div>
     </div>
 

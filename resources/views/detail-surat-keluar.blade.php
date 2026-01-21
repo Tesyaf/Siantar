@@ -1,14 +1,4 @@
 <x-app-layout>
-  @php
-  $status = $outgoingLetter->status ?? 'Menunggu';
-  $statusClass = match ($status) {
-  'Menunggu' => 'bg-amber-100 text-amber-700 border border-amber-200',
-  'Diproses' => 'bg-orange-100 text-orange-700 border border-orange-200',
-  'Terkirim' => 'bg-green-100 text-green-700 border border-green-200',
-  'Selesai' => 'bg-green-100 text-green-700 border border-green-200',
-  default => 'bg-gray-100 text-gray-700 border border-gray-200',
-  };
-  @endphp
   <div class="min-h-screen bg-[#f5f7fb]">
     <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
       <a href="{{ route('surat-keluar.index') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-500 font-semibold text-sm no-underline transition-colors">
@@ -20,12 +10,11 @@
 
       <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
         <div class="flex items-start justify-between flex-wrap gap-3 mb-5">
+          @if ($outgoingLetter->category)
           <div class="flex flex-col gap-2">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ $statusClass }}">{{ $status }}</span>
-            @if ($outgoingLetter->category)
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">{{ $outgoingLetter->category }}</span>
-            @endif
           </div>
+          @endif
           @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
           <div class="flex gap-2">
             <a href="{{ route('surat-keluar.edit', $outgoingLetter) }}" class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition no-underline">
@@ -44,6 +33,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">No Index</div>
+            <div class="font-bold text-gray-900">{{ $outgoingLetter->index_no ?? '-' }}</div>
+          </div>
+          <div>
             <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Nomor Surat</div>
             <div class="font-bold text-gray-900">{{ $outgoingLetter->letter_number }}</div>
           </div>
@@ -61,6 +54,10 @@
             <div class="font-bold text-gray-900">{{ $outgoingLetter->subject }}</div>
           </div>
 
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Tanggal Diterima</div>
+            <div class="font-bold text-gray-900">{{ optional($outgoingLetter->received_date)->format('d M Y') }}</div>
+          </div>
           <div>
             <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Jenis Surat</div>
             <div class="font-bold text-gray-900">Surat Keluar</div>

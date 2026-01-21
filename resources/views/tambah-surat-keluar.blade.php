@@ -24,13 +24,26 @@
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="letter_number" value="{{ old('letter_number') }}" placeholder="Masukkan nomor surat" required />
             </div>
             <div>
+              <label class="block text-xs font-bold text-gray-700 mb-2">No Index <span class="text-red-500">*</span></label>
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="number" min="1" name="index_no" value="{{ old('index_no', $nextIndexNo) }}" placeholder="Nomor index" required />
+            </div>
+            <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Alamat Penerima <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="recipient" value="{{ old('recipient') }}" placeholder="Nama instansi/organisasi penerima" required />
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="recipient" value="{{ old('recipient') }}" placeholder="Nama instansi/organisasi penerima" list="recipient-options" required />
+              <datalist id="recipient-options">
+                @foreach ($recipientOptions ?? [] as $recipientOption)
+                <option value="{{ $recipientOption }}"></option>
+                @endforeach
+              </datalist>
             </div>
 
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Surat <span class="text-red-500">*</span></label>
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="letter_date" value="{{ old('letter_date') }}" required />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Diterima <span class="text-red-500">*</span></label>
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="received_date" value="{{ old('received_date', $defaultReceivedDate->format('Y-m-d')) }}" required />
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Jenis Surat <span class="text-red-500">*</span></label>
@@ -48,12 +61,19 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span class="text-red-500">*</span></label>
-              <select class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="category">
-                <option value="" selected>Pilih kategori surat</option>
-                <option value="Undangan" @selected(old('category')==='Undangan' )>Undangan</option>
-                <option value="Laporan" @selected(old('category')==='Laporan' )>Laporan</option>
-                <option value="Permohonan" @selected(old('category')==='Permohonan' )>Permohonan</option>
-              </select>
+              <div class="relative">
+                <input id="category-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-10" name="category" value="{{ old('category') }}" placeholder="Pilih atau ketik kategori surat" autocomplete="off" required />
+                <button type="button" id="category-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition" aria-label="Tampilkan daftar kategori">
+                  <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="category-dropdown" class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
+                  @foreach ($categories as $category)
+                    <button type="button" class="category-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                      {{ $category }}
+                    </button>
+                  @endforeach
+                </div>
+              </div>
             </div>
 
             <div class="md:col-span-2">
@@ -67,21 +87,6 @@
               <div class="text-gray-400 text-xs flex items-center gap-2 mt-2"><i class="bi bi-info-circle"></i> Ringkasan isi surat digunakan sebagai gambaran umum isi dokumen.</div>
             </div>
 
-            <div class="md:col-span-2 mt-2">
-              <div class="font-bold text-gray-700 text-sm">Data Tambahan <span class="text-gray-400 font-normal">(Opsional)</span></div>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Berkas <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="file_number" value="{{ old('file_number') }}" placeholder="Nomor berkas" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Petunjuk <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="instruction_number" value="{{ old('instruction_number') }}" placeholder="Nomor petunjuk" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Paket <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="package_number" value="{{ old('package_number') }}" placeholder="Nomor paket" />
-            </div>
           </div>
         </section>
 
@@ -131,28 +136,6 @@
           </div>
         </section>
 
-        <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mt-4">
-          <div class="flex items-center gap-3 font-bold text-gray-900 mb-5">
-            <span class="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">
-              <i class="bi bi-diagram-3-fill"></i>
-            </span>
-            Status &amp; Alur <span class="text-gray-400 font-normal">(Opsional)</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Status Awal Surat</label>
-              <select class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="status">
-                <option value="Menunggu" @selected(old('status', 'Menunggu' )==='Menunggu' )>Menunggu Persetujuan</option>
-                <option value="Diproses" @selected(old('status')==='Diproses' )>Diproses</option>
-                <option value="Terkirim" @selected(old('status')==='Terkirim' )>Terkirim</option>
-                <option value="Selesai" @selected(old('status')==='Selesai' )>Selesai</option>
-              </select>
-              <div class="text-gray-400 text-xs flex items-center gap-2 mt-2"><i class="bi bi-info-circle"></i> Surat akan diproses sesuai alur persetujuan yang berlaku.</div>
-            </div>
-          </div>
-        </section>
-
         <div class="flex justify-end gap-3 mt-6">
           <a class="inline-flex items-center px-6 py-2.5 border border-gray-300 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 transition no-underline" href="{{ route('surat-keluar.index') }}">Batal</a>
           <button class="inline-flex items-center px-6 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 shadow-orange transition" type="submit">
@@ -168,6 +151,40 @@
 
     </main>
   </div>
+  <script>
+    (() => {
+      const indexInput = document.querySelector('input[name="index_no"]');
+      const receivedInput = document.querySelector('input[name="received_date"]');
+      const indexNoByYear = @json($indexNoByYear ?? []);
+      if (!indexInput || !receivedInput) {
+        return;
+      }
+
+      let manualIndexChange = false;
+      const updateIndex = () => {
+        const value = receivedInput.value;
+        if (!value) return;
+        const year = new Date(value).getFullYear();
+        if (!Number.isFinite(year)) return;
+        const nextIndex = (indexNoByYear[year] ?? 0) + 1;
+        indexInput.value = nextIndex;
+      };
+
+      indexInput.addEventListener('input', () => {
+        manualIndexChange = true;
+      });
+      receivedInput.addEventListener('input', () => {
+        if (!manualIndexChange) {
+          updateIndex();
+        }
+      });
+      receivedInput.addEventListener('change', () => {
+        if (!manualIndexChange) {
+          updateIndex();
+        }
+      });
+    })();
+  </script>
   <script>
     (() => {
       const uploadCards = document.querySelectorAll('[data-upload]');
@@ -361,6 +378,63 @@
           input.value = '';
         }
       }
+    })();
+  </script>
+  <script>
+    (() => {
+      const input = document.getElementById('category-input');
+      const toggle = document.getElementById('category-toggle');
+      const dropdown = document.getElementById('category-dropdown');
+      const options = Array.from(document.querySelectorAll('.category-option'));
+
+      if (!input || !toggle || !dropdown || options.length === 0) {
+        return;
+      }
+
+      const normalize = (value) => value.trim().toLowerCase();
+      const filterOptions = (value) => {
+        const needle = normalize(value);
+        let visibleCount = 0;
+        options.forEach((option) => {
+          const match = normalize(option.textContent || '').includes(needle);
+          option.classList.toggle('hidden', !match);
+          if (match) visibleCount += 1;
+        });
+        dropdown.classList.toggle('hidden', visibleCount === 0);
+      };
+
+      const openDropdown = () => {
+        filterOptions(input.value);
+        dropdown.classList.remove('hidden');
+      };
+
+      const closeDropdown = () => {
+        dropdown.classList.add('hidden');
+      };
+
+      toggle.addEventListener('click', () => {
+        if (dropdown.classList.contains('hidden')) {
+          openDropdown();
+        } else {
+          closeDropdown();
+        }
+      });
+
+      input.addEventListener('focus', openDropdown);
+      input.addEventListener('input', () => filterOptions(input.value));
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          input.value = option.textContent.trim();
+          closeDropdown();
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!dropdown.contains(event.target) && !input.contains(event.target) && !toggle.contains(event.target)) {
+          closeDropdown();
+        }
+      });
     })();
   </script>
 

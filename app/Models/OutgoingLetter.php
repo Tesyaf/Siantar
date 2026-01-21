@@ -12,11 +12,12 @@ class OutgoingLetter extends Model
     protected $fillable = [
         'letter_number',
         'letter_date',
+        'received_date',
         'recipient',
         'subject',
+        'index_no',
         'category',
         'summary',
-        'status',
         'priority',
         'file_number',
         'instruction_number',
@@ -33,6 +34,7 @@ class OutgoingLetter extends Model
 
     protected $casts = [
         'letter_date' => 'date',
+        'received_date' => 'date',
     ];
 
     public function user()

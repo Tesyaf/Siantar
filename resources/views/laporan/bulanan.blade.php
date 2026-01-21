@@ -27,7 +27,7 @@
             </div>
 
             <!-- Statistik Utama -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
                     <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Surat Masuk</div>
                     <div class="text-3xl font-extrabold text-orange-500 mt-1">{{ $incomingStats['total'] }}</div>
@@ -40,10 +40,6 @@
                     <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Total Surat</div>
                     <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $incomingStats['total'] + $outgoingStats['total'] }}</div>
                 </div>
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-                    <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Selesai Diproses</div>
-                    <div class="text-3xl font-extrabold text-green-500 mt-1">{{ $incomingStats['selesai'] + $outgoingStats['selesai'] }}</div>
-                </div>
             </div>
 
             <!-- Grafik per Hari -->
@@ -51,54 +47,6 @@
                 <h3 class="font-bold text-gray-900 mb-4">Grafik Surat per Hari</h3>
                 <div class="h-64">
                     <canvas id="dailyChart"></canvas>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Status Surat Masuk -->
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <h3 class="font-bold text-gray-900 mb-4">Status Surat Masuk</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Baru</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{{ $incomingStats['baru'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Menunggu</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">{{ $incomingStats['menunggu'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Diproses</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700">{{ $incomingStats['diproses'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Selesai</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">{{ $incomingStats['selesai'] }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Surat Keluar -->
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <h3 class="font-bold text-gray-900 mb-4">Status Surat Keluar</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Menunggu</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">{{ $outgoingStats['menunggu'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Diproses</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700">{{ $outgoingStats['diproses'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Terkirim</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{{ $outgoingStats['terkirim'] }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Selesai</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">{{ $outgoingStats['selesai'] }}</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 

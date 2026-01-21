@@ -11,8 +11,8 @@ function makeIncomingLetter(User $user, array $overrides = []): IncomingLetter
         'subject' => $overrides['subject'] ?? 'Surat Test',
         'received_date' => $overrides['received_date'] ?? now()->toDateString(),
         'letter_date' => $overrides['letter_date'] ?? now()->toDateString(),
+        'index_no' => $overrides['index_no'] ?? 1,
         'user_id' => $user->id,
-        'status' => $overrides['status'] ?? 'Baru',
         'forwarded_to' => $overrides['forwarded_to'] ?? null,
     ], $overrides));
 }
@@ -28,6 +28,7 @@ test('sekretariat input creates letter with null forwarded_to', function () {
             'letter_date' => now()->toDateString(),
             'received_date' => now()->toDateString(),
             'subject' => 'Surat Uji',
+            'index_no' => 1,
         ]);
 
     $response->assertRedirect(route('surat-masuk.index'));
@@ -35,7 +36,6 @@ test('sekretariat input creates letter with null forwarded_to', function () {
     $this->assertDatabaseHas('incoming_letters', [
         'letter_number' => 'SM-001',
         'forwarded_to' => null,
-        'status' => 'Baru',
         'user_id' => $sekretariat->id,
     ]);
 });
@@ -44,7 +44,6 @@ test('sekretariat can add instruction', function () {
     $sekretariat = User::factory()->create(['role' => 'sekretariat']);
     $letter = makeIncomingLetter($sekretariat, [
         'letter_number' => 'SM-INS-1',
-        'status' => 'Baru',
     ]);
 
     $response = $this
@@ -58,7 +57,6 @@ test('sekretariat can add instruction', function () {
     $this->assertDatabaseHas('incoming_letters', [
         'id' => $letter->id,
         'instruction' => 'Mohon tindak lanjut.',
-        'status' => 'Diproses',
     ]);
 });
 
@@ -67,7 +65,6 @@ test('admin can finalize incoming letter', function () {
     $sekretariat = User::factory()->create(['role' => 'sekretariat']);
     $letter = makeIncomingLetter($sekretariat, [
         'letter_number' => 'SM-KB-1',
-        'status' => 'Diproses',
     ]);
 
     $response = $this
@@ -81,7 +78,6 @@ test('admin can finalize incoming letter', function () {
     $this->assertDatabaseHas('incoming_letters', [
         'id' => $letter->id,
         'final_direction' => 'Setujui dan arsipkan.',
-        'status' => 'Selesai',
     ]);
 });
 

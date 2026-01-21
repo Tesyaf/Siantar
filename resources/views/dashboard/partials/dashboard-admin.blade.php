@@ -9,7 +9,7 @@
         </section>
 
         <!-- OVERVIEW CARDS -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
             <!-- Total Surat Masuk -->
             <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
                 <div class="flex justify-between items-start">
@@ -38,33 +38,6 @@
                 <p class="text-xs text-gray-400 mt-3">Dalam sistem</p>
             </div>
 
-            <!-- Belum Diproses -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Belum Diproses</p>
-                        <p class="text-3xl font-bold text-red-600 mt-2">{{ $incomingStats[1]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-red-100 text-red-600 grid place-items-center text-lg">
-                        <i class="bi bi-exclamation-circle-fill"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Membutuhkan tindakan</p>
-            </div>
-
-            <!-- Sudah Diproses -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Sudah Diproses</p>
-                        <p class="text-3xl font-bold text-green-500 mt-2">{{ $incomingStats[2]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-green-100 text-green-600 grid place-items-center text-lg">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Selesai diproses</p>
-            </div>
         </section>
 
         <!-- ADMIN ACTIONS -->
@@ -207,7 +180,6 @@
                         <p class="text-sm font-medium text-gray-900">{{ $activity['title'] }}</p>
                         <p class="text-xs text-gray-500 mt-1">{{ $activity['time'] }}</p>
                     </div>
-                    <span class="text-xs px-2 py-1 rounded-full {{ $activity['pillClass'] }} border">{{ $activity['status'] }}</span>
                 </div>
                 @endforeach
             </div>

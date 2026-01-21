@@ -131,7 +131,6 @@
                 <p class="text-xs text-gray-400">{{ $activity['time'] }}</p>
               </div>
             </div>
-            <span class="text-xs font-bold px-3 py-1 rounded-full border {{ $activity['pillClass'] }}">{{ $activity['status'] }}</span>
           </div>
           @empty
           <div class="text-sm text-gray-500">Belum ada aktivitas terbaru.</div>
@@ -154,40 +153,71 @@
         </div>
 
         <div class="overflow-x-auto">
-          <table class="min-w-full text-sm">
+          <table class="min-w-full text-sm table-fixed" data-sortable>
             <thead>
               <tr class="text-left text-gray-500 bg-[#f5f7fb]">
-                <th class="py-3 px-4 font-bold">No. Surat</th>
-                <th class="py-3 px-4 font-bold">Tanggal</th>
-                <th class="py-3 px-4 font-bold">Perihal</th>
-                <th class="py-3 px-4 font-bold">Jenis</th>
-                <th class="py-3 px-4 font-bold text-center">Status</th>
-                <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                <th class="py-3 px-4 font-bold" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    No. Surat <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-3 px-4 font-bold" data-sortable-col data-sort-type="date">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Tanggal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-3 px-4 font-bold" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Perihal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-3 px-4 font-bold" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Jenis <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-3 px-4 font-bold text-right text-gray-400 w-16"></th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
               @forelse ($latestLetters as $letter)
               <tr>
                 <td class="py-3 px-4 bg-gray-50">{{ $letter['no'] }}</td>
-                <td class="py-3 px-4 bg-gray-50">{{ $letter['date'] }}</td>
+                <td class="py-3 px-4 bg-gray-50" data-sort-value="{{ $letter['date_sort'] ? \Carbon\Carbon::parse($letter['date_sort'])->format('Y-m-d') : '' }}">{{ $letter['date'] }}</td>
                 <td class="py-3 px-4 bg-gray-50">{{ $letter['subject'] }}</td>
                 <td class="py-3 px-4 bg-gray-50">
                   <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold {{ $letter['typeClass'] }}">
                     {{ $letter['type'] }}
                   </span>
                 </td>
-                <td class="py-3 px-4 bg-gray-50 text-center">
-                  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold border {{ $letter['statusClass'] }}">
-                    {{ $letter['status'] }}
-                  </span>
-                </td>
-                <td class="py-3 px-4 bg-gray-50 text-right">
-                  <a class="btn btn-sm fw-bold !text-white !bg-orange-500 hover:!bg-orange-600 !border-0" href="{{ $letter['link'] }}">Lihat Detail</a>
+                <td class="py-3 px-4 bg-gray-50 text-right w-16">
+                  <div x-data="{ open: false }" class="relative inline-block action-menu">
+                    <button @click="open = !open" @click.outside="open = false" class="w-8 h-8 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                      <a href="{{ $letter['link'] }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                        <i class="bi bi-eye"></i> Lihat Detail
+                      </a>
+                      @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
+                      <a href="{{ $letter['type'] === 'Masuk' ? route('surat-masuk.edit', $letter['id']) : route('surat-keluar.edit', $letter['id']) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <form action="{{ $letter['type'] === 'Masuk' ? route('surat-masuk.destroy', $letter['id']) : route('surat-keluar.destroy', $letter['id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                          <i class="bi bi-trash"></i> Hapus
+                        </button>
+                      </form>
+                      @endif
+                    </div>
+                  </div>
                 </td>
               </tr>
               @empty
               <tr>
-                <td class="py-3 px-4 bg-gray-50 text-center text-gray-500" colspan="6">Belum ada surat terbaru.</td>
+                <td class="py-3 px-4 bg-gray-50 text-center text-gray-500" colspan="5">Belum ada surat terbaru.</td>
               </tr>
               @endforelse
             </tbody>

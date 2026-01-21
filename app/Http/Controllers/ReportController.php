@@ -51,19 +51,11 @@ class ReportController extends Controller
         // Statistik surat masuk
         $incomingStats = [
             'total' => IncomingLetter::whereYear('received_date', $year)->whereMonth('received_date', $monthNum)->count(),
-            'baru' => IncomingLetter::whereYear('received_date', $year)->whereMonth('received_date', $monthNum)->where('status', 'Baru')->count(),
-            'menunggu' => IncomingLetter::whereYear('received_date', $year)->whereMonth('received_date', $monthNum)->where('status', 'Menunggu')->count(),
-            'diproses' => IncomingLetter::whereYear('received_date', $year)->whereMonth('received_date', $monthNum)->where('status', 'Diproses')->count(),
-            'selesai' => IncomingLetter::whereYear('received_date', $year)->whereMonth('received_date', $monthNum)->where('status', 'Selesai')->count(),
         ];
 
         // Statistik surat keluar
         $outgoingStats = [
             'total' => OutgoingLetter::whereYear('letter_date', $year)->whereMonth('letter_date', $monthNum)->count(),
-            'menunggu' => OutgoingLetter::whereYear('letter_date', $year)->whereMonth('letter_date', $monthNum)->where('status', 'Menunggu')->count(),
-            'diproses' => OutgoingLetter::whereYear('letter_date', $year)->whereMonth('letter_date', $monthNum)->where('status', 'Diproses')->count(),
-            'terkirim' => OutgoingLetter::whereYear('letter_date', $year)->whereMonth('letter_date', $monthNum)->where('status', 'Terkirim')->count(),
-            'selesai' => OutgoingLetter::whereYear('letter_date', $year)->whereMonth('letter_date', $monthNum)->where('status', 'Selesai')->count(),
         ];
 
         // Surat masuk per kategori
@@ -142,19 +134,11 @@ class ReportController extends Controller
         // Statistik surat masuk
         $incomingStats = [
             'total' => IncomingLetter::whereYear('received_date', $year)->count(),
-            'baru' => IncomingLetter::whereYear('received_date', $year)->where('status', 'Baru')->count(),
-            'menunggu' => IncomingLetter::whereYear('received_date', $year)->where('status', 'Menunggu')->count(),
-            'diproses' => IncomingLetter::whereYear('received_date', $year)->where('status', 'Diproses')->count(),
-            'selesai' => IncomingLetter::whereYear('received_date', $year)->where('status', 'Selesai')->count(),
         ];
 
         // Statistik surat keluar
         $outgoingStats = [
             'total' => OutgoingLetter::whereYear('letter_date', $year)->count(),
-            'menunggu' => OutgoingLetter::whereYear('letter_date', $year)->where('status', 'Menunggu')->count(),
-            'diproses' => OutgoingLetter::whereYear('letter_date', $year)->where('status', 'Diproses')->count(),
-            'terkirim' => OutgoingLetter::whereYear('letter_date', $year)->where('status', 'Terkirim')->count(),
-            'selesai' => OutgoingLetter::whereYear('letter_date', $year)->where('status', 'Selesai')->count(),
         ];
 
         // Surat masuk per kategori
@@ -225,19 +209,11 @@ class ReportController extends Controller
             // Statistik surat masuk
             $incomingStats = [
                 'total' => $allIncoming->count(),
-                'baru' => $allIncoming->where('status', 'Baru')->count(),
-                'menunggu' => $allIncoming->where('status', 'Menunggu')->count(),
-                'diproses' => $allIncoming->where('status', 'Diproses')->count(),
-                'selesai' => $allIncoming->where('status', 'Selesai')->count(),
             ];
 
             // Statistik surat keluar
             $outgoingStats = [
                 'total' => $allOutgoing->count(),
-                'menunggu' => $allOutgoing->where('status', 'Menunggu')->count(),
-                'diproses' => $allOutgoing->where('status', 'Diproses')->count(),
-                'terkirim' => $allOutgoing->where('status', 'Terkirim')->count(),
-                'selesai' => $allOutgoing->where('status', 'Selesai')->count(),
             ];
 
             // Kategori
@@ -269,19 +245,11 @@ class ReportController extends Controller
             // Statistik surat masuk
             $incomingStats = [
                 'total' => $allIncoming->count(),
-                'baru' => $allIncoming->where('status', 'Baru')->count(),
-                'menunggu' => $allIncoming->where('status', 'Menunggu')->count(),
-                'diproses' => $allIncoming->where('status', 'Diproses')->count(),
-                'selesai' => $allIncoming->where('status', 'Selesai')->count(),
             ];
 
             // Statistik surat keluar
             $outgoingStats = [
                 'total' => $allOutgoing->count(),
-                'menunggu' => $allOutgoing->where('status', 'Menunggu')->count(),
-                'diproses' => $allOutgoing->where('status', 'Diproses')->count(),
-                'terkirim' => $allOutgoing->where('status', 'Terkirim')->count(),
-                'selesai' => $allOutgoing->where('status', 'Selesai')->count(),
             ];
 
             // Kategori

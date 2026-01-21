@@ -306,11 +306,11 @@
           <ul class="space-y-3 text-sm text-white/70">
             <li class="flex gap-3">
               <i class="fa-solid fa-location-dot mt-1 text-[var(--brand)]"></i>
-              <span>Jl. Dokter Susilo No. 2, Kelurahan Sumur Batu, Kecamatan Teluk Betung Utara, Kota Bandar Lampung, Lampung</span>
+              <span>Jl. Dokter Susilo No. 2, Kota Bandar Lampung</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="fa-solid fa-phone text-[var(--brand)]"></i>
-              <span>(0721) 481544</span>
+              <span>(0721) 476838</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="fa-solid fa-envelope text-[var(--brand)]"></i>

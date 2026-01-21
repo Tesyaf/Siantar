@@ -35,8 +35,13 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        // Full-text search index for MySQL
-        DB::statement('ALTER TABLE outgoing_letters ADD FULLTEXT INDEX idx_outgoing_fulltext (subject, summary)');
+        // Full-text search index by driver
+        $driver = DB::getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement('ALTER TABLE outgoing_letters ADD FULLTEXT INDEX idx_outgoing_fulltext (subject, summary)');
+        } elseif ($driver === 'pgsql') {
+            DB::statement("CREATE INDEX idx_outgoing_fulltext ON outgoing_letters USING GIN (to_tsvector('simple', coalesce(subject, '') || ' ' || coalesce(summary, '')))");
+        }
     }
 
     /**

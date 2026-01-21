@@ -8,11 +8,11 @@
                 @endphp
 
                 @if($userRole === 'kepala_badan')
-                @include('profile.partials.profile-kepala-badan', compact('user', 'incomingTotal', 'outgoingTotal', 'pendingApproval', 'inProgress'))
+                @include('profile.partials.profile-kepala-badan', compact('user', 'incomingTotal', 'outgoingTotal'))
                 @elseif($userRole === 'sekretaris')
-                @include('profile.partials.profile-sekretaris', compact('user', 'incomingTotal', 'outgoingTotal', 'incomingProcessed', 'pendingApproval'))
+                @include('profile.partials.profile-sekretaris', compact('user', 'incomingTotal', 'outgoingTotal'))
                 @elseif($userRole === 'admin')
-                @include('profile.partials.profile-admin', compact('user', 'incomingTotal', 'outgoingTotal', 'pendingLetters', 'archivedCount'))
+                @include('profile.partials.profile-admin', compact('user', 'incomingTotal', 'outgoingTotal'))
                 @else
                 <!-- Default profile for other roles -->
                 <div class="space-y-6">

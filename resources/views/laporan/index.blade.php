@@ -64,7 +64,7 @@
             <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3 mt-6">
                 <i class="bi bi-info-circle-fill text-blue-500 mt-0.5"></i>
                 <div class="text-sm text-blue-800">
-                    <strong>Informasi:</strong> Laporan akan menampilkan statistik lengkap termasuk jumlah surat masuk & keluar, status surat, kategori, dan grafik visualisasi data.
+                    <strong>Informasi:</strong> Laporan akan menampilkan statistik lengkap termasuk jumlah surat masuk & keluar, kategori, dan grafik visualisasi data.
                 </div>
             </div>
         </main>

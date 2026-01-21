@@ -305,8 +305,8 @@
 
               <div class="flex items-center justify-between py-4 px-4">
                 <div>
-                  <div class="text-sm font-semibold text-gray-700">Notifikasi Perubahan Status Surat</div>
-                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan ketika status surat berubah</div>
+                  <div class="text-sm font-semibold text-gray-700">Notifikasi Perubahan Surat</div>
+                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan ketika data surat diperbarui</div>
                 </div>
                 <button class="toggle" data-on="false" type="button" onclick="toggleSwitch(this)"></button>
               </div>

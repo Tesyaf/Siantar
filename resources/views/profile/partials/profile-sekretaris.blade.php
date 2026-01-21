@@ -65,12 +65,12 @@
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
-            <p class="text-xs font-medium text-blue-600">Surat Masuk Diproses</p>
-            <p class="text-2xl font-bold text-blue-900 mt-2">{{ $incomingProcessed ?? 0 }}</p>
+            <p class="text-xs font-medium text-blue-600">Total Surat Masuk</p>
+            <p class="text-2xl font-bold text-blue-900 mt-2">{{ $incomingTotal ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4">
-            <p class="text-xs font-medium text-yellow-600">Menunggu Persetujuan</p>
-            <p class="text-2xl font-bold text-yellow-900 mt-2">{{ $pendingApproval ?? 0 }}</p>
+            <p class="text-xs font-medium text-yellow-600">Total Surat Keluar</p>
+            <p class="text-2xl font-bold text-yellow-900 mt-2">{{ $outgoingTotal ?? 0 }}</p>
         </div>
         <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-lg p-4">
             <p class="text-xs font-medium text-cyan-600">Total Dokumen</p>
