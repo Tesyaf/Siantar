@@ -16,7 +16,7 @@
       <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm mb-4">{{ session('error') }}</div>
       @endif
 
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
           <div>
             <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Total Surat Keluar</div>
@@ -24,6 +24,15 @@
           </div>
           <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
             <i class="bi bi-send-fill text-orange-500 text-xl"></i>
+          </div>
+        </div>
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
+          <div>
+            <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Surat Keluar Baru (Hari Ini)</div>
+            <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $stats['today'] }}</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
+            <i class="bi bi-stars text-green-600 text-xl"></i>
           </div>
         </div>
       </div>

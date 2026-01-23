@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\OutgoingLetter;
+use App\Models\User;
+use App\Notifications\OutgoingLetterCreated;
 use App\Services\GoogleDriveService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class OutgoingLetterController extends Controller
@@ -37,6 +40,7 @@ class OutgoingLetterController extends Controller
 
         $stats = [
             'total' => OutgoingLetter::count(),
+            'today' => OutgoingLetter::query()->whereDate('received_date', Carbon::today())->count(),
         ];
 
         return view('surat-keluar.index', compact('letters', 'stats'));
@@ -167,7 +171,8 @@ class OutgoingLetterController extends Controller
         // Remove custom_filename from data as it's not a database column
         unset($data['custom_filename']);
 
-        DB::transaction(function () use (&$data, $indexNo, $indexYear) {
+        $outgoingLetter = null;
+        DB::transaction(function () use (&$data, $indexNo, $indexYear, &$outgoingLetter) {
             OutgoingLetter::query()
                 ->whereYear('received_date', $indexYear)
                 ->whereNotNull('index_no')
@@ -175,8 +180,15 @@ class OutgoingLetterController extends Controller
                 ->increment('index_no');
 
             $data['index_no'] = $indexNo;
-            OutgoingLetter::create($data);
+            $outgoingLetter = OutgoingLetter::create($data);
         });
+
+        if ($outgoingLetter) {
+            $recipients = User::query()
+                ->whereIn('role', ['sekretariat', 'admin'])
+                ->get();
+            Notification::send($recipients, new OutgoingLetterCreated($outgoingLetter));
+        }
 
         return redirect()->route('surat-keluar.index')->with('success', 'Surat keluar berhasil disimpan.');
     }

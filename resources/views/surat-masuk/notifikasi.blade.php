@@ -67,140 +67,72 @@
       <h1 class="text-[34px] font-bold leading-tight">Notifikasi</h1>
       <p class="text-gray-500 text-[14px] mt-2 mb-10">Daftar pemberitahuan terkait aktivitas surat dan sistem</p>
 
-      <!-- Hari Ini -->
-      <div class="mt-8">
-        <div class="text-sm font-semibold text-gray-500 mb-4">Hari Ini</div>
+      @php
+      $sections = [
+        'today' => 'Hari Ini',
+        'yesterday' => 'Kemarin',
+        'older' => 'Sebelumnya',
+      ];
+      $iconMap = [
+        'mail' => ['icon' => 'fa-regular fa-envelope', 'box' => 'icon-mail'],
+        'send' => ['icon' => 'fa-solid fa-paper-plane', 'box' => 'icon-send'],
+        'info' => ['icon' => 'fa-solid fa-circle-info', 'box' => 'icon-info'],
+      ];
+      $totalNotifications = collect($groupedNotifications)->flatten()->count();
+      @endphp
 
-        <div class="space-y-6">
-          <!-- item 1 -->
-          <div class="card p-5">
-            <div class="left-accent">
-              <div class="flex items-start gap-4">
-                <div class="icon-box icon-mail">
-                  <i class="fa-regular fa-envelope"></i>
-                </div>
-                <div class="flex-1">
-                  <div class="text-sm font-semibold text-gray-800">Surat Masuk Baru dari Dinas Pendidikan</div>
-                  <div class="text-sm text-gray-500 mt-1">
-                    Surat perihal "Undangan Rapat Koordinasi Pendidikan" telah diterima dan menunggu disposisi
-                  </div>
-                  <div class="time"><i class="fa-regular fa-clock"></i> 2 jam yang lalu</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- item 2 -->
-          <div class="card p-5">
-            <div class="left-accent">
-              <div class="flex items-start gap-4">
-                <div class="icon-box icon-send">
-                  <i class="fa-solid fa-paper-plane"></i>
-                </div>
-                <div class="flex-1">
-                  <div class="text-sm font-semibold text-gray-800">Surat Keluar Telah Disetujui</div>
-                  <div class="text-sm text-gray-500 mt-1">
-                    Surat nomor 045/BKBP/2024 perihal "Laporan Kegiatan Bulan Januari" telah disetujui dan siap dikirim
-                  </div>
-                  <div class="time"><i class="fa-regular fa-clock"></i> 4 jam yang lalu</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- item 3 -->
-          <div class="card p-5">
-            <div class="left-accent">
-              <div class="flex items-start gap-4">
-                <div class="icon-box icon-info">
-                  <i class="fa-solid fa-circle-info"></i>
-                </div>
-                <div class="flex-1">
-                  <div class="text-sm font-semibold text-gray-800">Pemeliharaan Sistem Terjadwal</div>
-                  <div class="text-sm text-gray-500 mt-1">
-                    Sistem SIANTAR akan menjalani pemeliharaan rutin pada Minggu, 25 Februari 2024 pukul 00:00 - 04:00 WIB
-                  </div>
-                  <div class="time"><i class="fa-regular fa-clock"></i> 5 jam yang lalu</div>
-                </div>
-              </div>
-            </div>
-          </div>
+      @if ($totalNotifications === 0)
+        <div class="card p-8 text-center text-gray-500">
+          Belum ada notifikasi.
         </div>
-      </div>
-
-      <!-- Kemarin -->
-      <div class="mt-14">
-        <div class="text-sm font-semibold text-gray-500 mb-4">Kemarin</div>
-
-        <div class="space-y-6">
-          <div class="card p-6">
-            <div class="flex items-start gap-4">
-              <div class="icon-box icon-mail">
-                <i class="fa-regular fa-envelope"></i>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-semibold text-gray-800">Surat Masuk dari Sekretariat Daerah</div>
-                <div class="text-sm text-gray-500 mt-1">
-                  Surat perihal "Permintaan Data Kegiatan" telah didisposisi ke Kepala Bidang
-                </div>
-                <div class="time"><i class="fa-regular fa-clock"></i> 1 hari yang lalu</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card p-6">
-            <div class="flex items-start gap-4">
-              <div class="icon-box icon-send">
-                <i class="fa-solid fa-paper-plane"></i>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-semibold text-gray-800">Surat Keluar Berhasil Terkirim</div>
-                <div class="text-sm text-gray-500 mt-1">
-                  Surat nomor 043/BKBP/2024 telah terkirim ke Dinas Kesehatan
-                </div>
-                <div class="time"><i class="fa-regular fa-clock"></i> 1 hari yang lalu</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sebelumnya -->
-      <div class="mt-14">
-        <div class="text-sm font-semibold text-gray-500 mb-4">Sebelumnya</div>
-
-        <div class="space-y-6">
-          <div class="card p-6">
-            <div class="flex items-start gap-4">
-              <div class="icon-box icon-info">
-                <i class="fa-solid fa-circle-info"></i>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-semibold text-gray-800">Update Sistem SIANTAR v2.1</div>
-                <div class="text-sm text-gray-500 mt-1">
-                  Fitur baru: Filter pencarian lanjutan dan ekspor laporan dalam format Excel telah ditambahkan
-                </div>
-                <div class="time"><i class="fa-regular fa-clock"></i> 3 hari yang lalu</div>
+      @else
+        @foreach ($sections as $key => $label)
+          @php
+          $items = $groupedNotifications[$key] ?? [];
+          @endphp
+          @if (count($items) > 0)
+            <div class="{{ $key === 'today' ? 'mt-8' : 'mt-14' }}">
+              <div class="text-sm font-semibold text-gray-500 mb-4">{{ $label }}</div>
+              <div class="space-y-6">
+                @foreach ($items as $notification)
+                  @php
+                  $data = $notification->data ?? [];
+                  $iconKey = $data['icon'] ?? 'info';
+                  $icon = $iconMap[$iconKey]['icon'] ?? $iconMap['info']['icon'];
+                  $iconBox = $iconMap[$iconKey]['box'] ?? $iconMap['info']['box'];
+                  $createdAt = $notification->created_at
+                    ? \Illuminate\Support\Carbon::parse($notification->created_at)
+                    : null;
+                  $timeLabel = $createdAt ? $createdAt->diffForHumans() : '-';
+                  $url = $data['url'] ?? null;
+                  @endphp
+                  <div class="card p-5">
+                    <div class="left-accent">
+                      <div class="flex items-start gap-4">
+                        <div class="icon-box {{ $iconBox }}">
+                          <i class="{{ $icon }}"></i>
+                        </div>
+                        <div class="flex-1">
+                          <div class="text-sm font-semibold text-gray-800">
+                            {{ $data['title'] ?? 'Notifikasi' }}
+                          </div>
+                          <div class="text-sm text-gray-500 mt-1">
+                            {{ $data['message'] ?? '-' }}
+                          </div>
+                          @if ($url)
+                            <a href="{{ $url }}" class="text-sm text-orange-500 mt-2 inline-block">Lihat detail</a>
+                          @endif
+                          <div class="time"><i class="fa-regular fa-clock"></i> {{ $timeLabel }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                @endforeach
               </div>
             </div>
-          </div>
-
-          <div class="card p-6">
-            <div class="flex items-start gap-4">
-              <div class="icon-box icon-mail">
-                <i class="fa-regular fa-envelope"></i>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-semibold text-gray-800">Surat Masuk dari Gubernur</div>
-                <div class="text-sm text-gray-500 mt-1">
-                  Surat perihal "Arahan Kebijakan 2024" telah diarsipkan
-                </div>
-                <div class="time"><i class="fa-regular fa-clock"></i> 5 hari yang lalu</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          @endif
+        @endforeach
+      @endif
 
     </main>
   </div>

@@ -43,12 +43,22 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-2">Alamat Penerima <span class="text-red-500">*</span></label>
-                            <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="recipient" value="{{ old('recipient', $outgoingLetter->recipient) }}" placeholder="Nama instansi/organisasi penerima" list="recipient-options" required />
-                            <datalist id="recipient-options">
-                                @foreach ($recipientOptions ?? [] as $recipientOption)
-                                <option value="{{ $recipientOption }}"></option>
-                                @endforeach
-                            </datalist>
+                            <div class="relative">
+                                <input id="recipient-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-16" name="recipient" value="{{ old('recipient', $outgoingLetter->recipient) }}" placeholder="Nama instansi/organisasi penerima" autocomplete="off" required />
+                                <button type="button" data-clear-target="recipient-input" class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden" aria-label="Hapus penerima">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <button type="button" id="recipient-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition" aria-label="Tampilkan daftar penerima">
+                                    <i class="bi bi-chevron-down"></i>
+                                </button>
+                                <div id="recipient-dropdown" class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
+                                    @foreach ($recipientOptions ?? [] as $recipientOption)
+                                        <button type="button" class="recipient-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                                            {{ $recipientOption }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
                             @error('recipient')
                             <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                             @enderror
@@ -87,12 +97,17 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span class="text-red-500">*</span></label>
-                            <select class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="category">
-                                <option value="">Pilih kategori surat</option>
-                                <option value="Undangan" @selected(old('category', $outgoingLetter->category) === 'Undangan')>Undangan</option>
-                                <option value="Laporan" @selected(old('category', $outgoingLetter->category) === 'Laporan')>Laporan</option>
-                                <option value="Permohonan" @selected(old('category', $outgoingLetter->category) === 'Permohonan')>Permohonan</option>
-                            </select>
+                            <div class="relative">
+                                <select id="category-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white pr-10" name="category">
+                                    <option value="">Pilih kategori surat</option>
+                                    <option value="Undangan" @selected(old('category', $outgoingLetter->category) === 'Undangan')>Undangan</option>
+                                    <option value="Laporan" @selected(old('category', $outgoingLetter->category) === 'Laporan')>Laporan</option>
+                                    <option value="Permohonan" @selected(old('category', $outgoingLetter->category) === 'Permohonan')>Permohonan</option>
+                                </select>
+                                <button type="button" data-clear-target="category-input" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden" aria-label="Hapus kategori">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
                             @error('category')
                             <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                             @enderror
@@ -218,6 +233,39 @@
                 if (!manualIndexChange) {
                     updateIndex();
                 }
+            });
+        })();
+    </script>
+    <script>
+        (() => {
+            const clearButtons = Array.from(document.querySelectorAll('[data-clear-target]'));
+            if (clearButtons.length === 0) {
+                return;
+            }
+
+            const updateButton = (input, button) => {
+                const hasValue = Boolean(input.value && input.value.trim());
+                button.classList.toggle('hidden', !hasValue);
+            };
+
+            clearButtons.forEach((button) => {
+                const targetId = button.getAttribute('data-clear-target');
+                const input = document.getElementById(targetId);
+                if (!input) {
+                    return;
+                }
+
+                updateButton(input, button);
+                input.addEventListener('input', () => updateButton(input, button));
+                input.addEventListener('change', () => updateButton(input, button));
+
+                button.addEventListener('click', () => {
+                    input.value = '';
+                    updateButton(input, button);
+                    input.focus();
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                });
             });
         })();
     </script>
@@ -389,6 +437,63 @@
                 });
 
                 resetPreview();
+            });
+        })();
+    </script>
+    <script>
+        (() => {
+            const input = document.getElementById('recipient-input');
+            const toggle = document.getElementById('recipient-toggle');
+            const dropdown = document.getElementById('recipient-dropdown');
+            const options = Array.from(document.querySelectorAll('.recipient-option'));
+
+            if (!input || !toggle || !dropdown || options.length === 0) {
+                return;
+            }
+
+            const normalize = (value) => value.trim().toLowerCase();
+            const filterOptions = (value) => {
+                const needle = normalize(value);
+                let visibleCount = 0;
+                options.forEach((option) => {
+                    const match = normalize(option.textContent || '').includes(needle);
+                    option.classList.toggle('hidden', !match);
+                    if (match) visibleCount += 1;
+                });
+                dropdown.classList.toggle('hidden', visibleCount === 0);
+            };
+
+            const openDropdown = () => {
+                filterOptions(input.value);
+                dropdown.classList.remove('hidden');
+            };
+
+            const closeDropdown = () => {
+                dropdown.classList.add('hidden');
+            };
+
+            toggle.addEventListener('click', () => {
+                if (dropdown.classList.contains('hidden')) {
+                    openDropdown();
+                } else {
+                    closeDropdown();
+                }
+            });
+
+            input.addEventListener('focus', openDropdown);
+            input.addEventListener('input', () => filterOptions(input.value));
+
+            options.forEach((option) => {
+                option.addEventListener('click', () => {
+                    input.value = option.textContent.trim();
+                    closeDropdown();
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!dropdown.contains(event.target) && !input.contains(event.target) && !toggle.contains(event.target)) {
+                    closeDropdown();
+                }
             });
         })();
     </script>

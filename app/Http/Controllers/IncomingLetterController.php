@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Notifications\IncomingLetterCreated;
 use App\Services\GoogleDriveService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class IncomingLetterController extends Controller
@@ -42,6 +44,7 @@ class IncomingLetterController extends Controller
         $this->applyRoleScope($statsBase, $request->user());
         $stats = [
             'total' => (clone $statsBase)->count(),
+            'today' => (clone $statsBase)->whereDate('received_date', Carbon::today())->count(),
         ];
 
         return view('surat-masuk.index', compact('letters', 'stats'));
@@ -174,7 +177,8 @@ class IncomingLetterController extends Controller
         // Remove custom_filename from data as it's not a database column
         unset($data['custom_filename']);
 
-        DB::transaction(function () use (&$data, $indexNo, $indexYear) {
+        $incomingLetter = null;
+        DB::transaction(function () use (&$data, $indexNo, $indexYear, &$incomingLetter) {
             IncomingLetter::query()
                 ->whereYear('received_date', $indexYear)
                 ->whereNotNull('index_no')
@@ -182,8 +186,15 @@ class IncomingLetterController extends Controller
                 ->increment('index_no');
 
             $data['index_no'] = $indexNo;
-            IncomingLetter::create($data);
+            $incomingLetter = IncomingLetter::create($data);
         });
+
+        if ($incomingLetter) {
+            $recipients = User::query()
+                ->whereIn('role', ['sekretariat', 'admin'])
+                ->get();
+            Notification::send($recipients, new IncomingLetterCreated($incomingLetter));
+        }
 
         return redirect()->route('surat-masuk.index')->with('success', 'Surat masuk berhasil disimpan.');
     }
