@@ -1,200 +1,228 @@
 <x-app-layout>
   @php
-    $canInputLetter = Auth::user()->hasAnyRole(['sekretariat', 'admin']);
-    $jenisClasses = [
-      'Surat Masuk' => 'badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle',
-      'Surat Keluar' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-    ];
-    $statusClasses = [
-      'aktif' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-      'arsip' => 'badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle',
-      'baru' => 'badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle',
-      'menunggu' => 'badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle',
-      'diproses' => 'badge rounded-pill bg-orange-100 text-orange-700 border border-orange-200',
-      'terkirim' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-      'selesai' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-    ];
+  $canInputLetter = Auth::user()->hasAnyRole(['sekretariat', 'admin']);
+  $jenisClasses = [
+  'Surat Masuk' => 'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200',
+  'Surat Keluar' => 'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200',
+  ];
   @endphp
-  <main class="container py-4">
-    <a href="{{ route('dashboard') }}" class="text-muted text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 hover:text-gray-800">
-      <i class="bi bi-arrow-left"></i> Kembali
-    </a>
+  <div class="min-h-screen bg-[#f5f7fb]">
+    <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
+      <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-500 font-semibold text-sm no-underline transition-colors">
+        <i class="bi bi-arrow-left"></i> Kembali ke Beranda
+      </a>
 
-    <div class="text-center mt-2">
-      <div class="text-3xl font-extrabold text-gray-900">Arsip Digital</div>
-      <p class="text-gray-500 mb-0">Telusuri arsip surat masuk dan surat keluar dengan mudah</p>
-    </div>
-
-    <form method="GET" action="{{ route('cari-arsip') }}">
-      <section class="card border-0 shadow-sm mt-4">
-        <div class="card-body">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input class="form-control" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nomor surat, perihal, atau instansi..." />
-          </div>
-          <div class="d-flex justify-content-center mt-3">
-            <button class="btn text-white bg-[#ff7f00] hover:bg-[#f36f00] border-0 fw-bold" type="submit">
-              <i class="bi bi-search me-2"></i> Cari Arsip Digital
-            </button>
-          </div>
+      <div class="flex items-center justify-between mt-6 mb-6">
+        <div class="text-center flex-1">
+          <h1 class="text-2xl font-extrabold text-gray-900">Arsip Digital</h1>
+          <p class="text-gray-500 text-sm mt-1">Telusuri arsip surat masuk dan surat keluar dengan mudah</p>
         </div>
-      </section>
+        <a href="{{ route('laporan.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition no-underline">
+          <i class="bi bi-file-earmark-bar-graph"></i> Buat Laporan
+        </a>
+      </div>
 
-      <section class="card border-0 shadow-sm mt-3">
-        <div class="card-body">
-          <div class="fw-bold text-gray-900 mb-3">Filter Lanjutan</div>
-          <div class="row g-3 align-items-end">
-            <div class="col-lg-3">
-              <div class="fw-bold text-gray-700 small mb-2">Jenis Surat</div>
-              <select class="form-select" name="jenis">
-                <option value="">Semua</option>
-                @foreach ($jenisOptions as $jenis)
-                  <option value="{{ $jenis }}" @selected(request('jenis') === $jenis)>{{ $jenis }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <div class="fw-bold text-gray-700 small mb-2">Kategori Surat</div>
-              <select class="form-select" name="folder">
-                <option value="">Semua Kategori</option>
-                @foreach ($folderOptions as $folder)
-                  <option value="{{ $folder }}" @selected(request('folder') === $folder)>{{ $folder }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <div class="fw-bold text-gray-700 small mb-2">Status Surat</div>
-              <select class="form-select" name="status">
-                <option value="">Semua Status</option>
-                @foreach ($statusOptions as $status)
-                  <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <div class="fw-bold text-gray-700 small mb-2">Rentang Tanggal</div>
-              <div class="d-flex gap-2">
-                <div class="input-group">
-                  <input class="form-control" type="date" name="date_start" value="{{ request('date_start') }}" />
-                  <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                </div>
-                <div class="input-group">
-                  <input class="form-control" type="date" name="date_end" value="{{ request('date_end') }}" />
-                  <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+      <form x-data="{ loading: false }" x-ref="filterForm" method="GET" action="{{ route('cari-arsip') }}">
+        <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 mb-4">
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><i class="bi bi-search text-lg"></i></span>
+            <input x-on:input.debounce.400ms="loading = true; $el.closest('form').submit()" class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nomor surat, perihal, atau instansi..." />
+          </div>
+          <div x-show="loading" class="flex items-center justify-center mt-4">
+            <div class="animate-spin rounded-full h-5 w-5 border-2 border-orange-500 border-t-transparent"></div>
+            <span class="ml-2 text-sm text-gray-500">Mencari...</span>
+          </div>
+        </section>
+
+        <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-4 overflow-visible">
+          <div class="flex flex-wrap items-end gap-4">
+            {{-- Jenis Dropdown --}}
+            <div class="flex-1 min-w-[140px]" x-data="{
+              open: false,
+              search: '{{ request('jenis') }}',
+              selected: '{{ request('jenis') }}',
+              options: @js(array_merge([''], is_array($jenisOptions) ? $jenisOptions : $jenisOptions->toArray())),
+              get filtered() {
+                if (!this.search) return this.options;
+                return this.options.filter(o => o.toLowerCase().includes(this.search.toLowerCase()));
+              },
+              select(val) {
+                this.selected = val;
+                this.search = val;
+                this.open = false;
+                $nextTick(() => $el.closest('form').submit());
+              }
+            }" @click.outside="open = false">
+              <label class="block text-xs font-bold text-gray-700 mb-2">Jenis</label>
+              <div class="relative">
+                <input type="text" x-model="search" @focus="open = true" @input="open = true"
+                  @keydown.enter.prevent="if(filtered.length) select(filtered[0])"
+                  @keydown.escape="open = false"
+                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white" placeholder="Semua" autocomplete="off" />
+                <input type="hidden" name="jenis" :value="selected" />
+                <div x-show="open && filtered.length" x-transition class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  <template x-for="opt in filtered" :key="opt">
+                    <div @click="select(opt)" class="px-4 py-2 text-sm cursor-pointer hover:bg-orange-50 hover:text-orange-600" :class="{ 'bg-orange-50 text-orange-600': selected === opt }" x-text="opt || 'Semua'"></div>
+                  </template>
                 </div>
               </div>
             </div>
-            <div class="col-12 d-flex justify-content-end">
-              <a class="btn text-white bg-[#ff7f00] hover:bg-[#f36f00] border-0 fw-bold" href="{{ route('cari-arsip') }}">
-                <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Filter
+
+            {{-- Kategori Dropdown --}}
+            <div class="flex-1 min-w-[140px]" x-data="{
+              open: false,
+              search: '{{ request('folder') }}',
+              selected: '{{ request('folder') }}',
+              options: @js(array_merge([''], is_array($folderOptions) ? $folderOptions : $folderOptions->toArray())),
+              get filtered() {
+                if (!this.search) return this.options;
+                return this.options.filter(o => o.toLowerCase().includes(this.search.toLowerCase()));
+              },
+              select(val) {
+                this.selected = val;
+                this.search = val;
+                this.open = false;
+                $nextTick(() => $el.closest('form').submit());
+              }
+            }" @click.outside="open = false">
+              <label class="block text-xs font-bold text-gray-700 mb-2">Kategori</label>
+              <div class="relative">
+                <input type="text" x-model="search" @focus="open = true" @input="open = true"
+                  @keydown.enter.prevent="if(filtered.length) select(filtered[0])"
+                  @keydown.escape="open = false"
+                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white" placeholder="Semua" autocomplete="off" />
+                <input type="hidden" name="folder" :value="selected" />
+                <div x-show="open && filtered.length" x-transition class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  <template x-for="opt in filtered" :key="opt">
+                    <div @click="select(opt)" class="px-4 py-2 text-sm cursor-pointer hover:bg-orange-50 hover:text-orange-600" :class="{ 'bg-orange-50 text-orange-600': selected === opt }" x-text="opt || 'Semua'"></div>
+                  </template>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-[140px]">
+              <label class="block text-xs font-bold text-gray-700 mb-2">Dari</label>
+              <input x-on:change="loading = true; $el.closest('form').submit()" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="date_start" value="{{ request('date_start') }}" />
+            </div>
+            <div class="flex-1 min-w-[140px]">
+              <label class="block text-xs font-bold text-gray-700 mb-2">Sampai</label>
+              <input x-on:change="loading = true; $el.closest('form').submit()" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="date_end" value="{{ request('date_end') }}" />
+            </div>
+            <div>
+              <a :class="{ 'opacity-50 pointer-events-none': loading }" class="inline-flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition no-underline" href="{{ route('cari-arsip') }}" title="Reset Filter">
+                <i class="bi bi-arrow-counterclockwise"></i>
               </a>
             </div>
           </div>
-        </div>
-      </section>
-    </form>
+        </section>
+      </form>
 
-    <section class="card border-0 shadow-sm mt-3">
-      <div class="card-body pb-0">
-        <div class="fw-bold text-gray-900">Hasil Pencarian Arsip</div>
-        <div class="text-muted small">
-          @if ($archives->total() > 0)
+      <section class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden mb-4">
+        <div class="px-5 py-4 border-b border-gray-100">
+          <div class="font-bold text-gray-900">Hasil Pencarian Arsip</div>
+          <div class="text-gray-500 text-sm mt-1">
+            @if ($archives->total() > 0)
             Menampilkan {{ $archives->firstItem() }}-{{ $archives->lastItem() }} dari {{ $archives->total() }} arsip ditemukan
-          @else
+            @else
             Belum ada arsip ditemukan
-          @endif
+            @endif
+          </div>
         </div>
-      </div>
 
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th class="min-w-[150px]">Nomor Surat</th>
-              <th class="min-w-[130px]">Tanggal</th>
-              <th class="min-w-[130px]">Jenis</th>
-              <th>Perihal</th>
-              <th>Instansi</th>
-              <th class="min-w-[120px]">Status</th>
-              <th class="min-w-[130px] text-end">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($archives as $archive)
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" data-sortable>
+            <thead>
+              <tr class="bg-gray-50 text-left">
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Nomor Surat <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col data-sort-type="date">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Tanggal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Jenis <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Perihal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Instansi <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-400 text-center"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              @forelse ($archives as $archive)
               @php
-                $jenisClass = $jenisClasses[$archive->jenis] ?? 'badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle';
-                $statusKey = strtolower($archive->status ?? '');
-                $statusClass = $statusClasses[$statusKey] ?? 'badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle';
-                $detailUrl = match ($archive->source) {
-                  'incoming' => route('detail-surat-masuk', $archive->id),
-                  'outgoing' => route('detail-surat-keluar', $archive->id),
-                  default => route('archives.show', $archive->id),
-                };
+              $jenisClass = $jenisClasses[$archive->jenis] ?? 'inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700 border border-gray-200';
+              $detailUrl = match ($archive->source) {
+              'incoming' => route('detail-surat-masuk', $archive->id),
+              'outgoing' => route('detail-surat-keluar', $archive->id),
+              default => route('archives.show', $archive->id),
+              };
               @endphp
-              <tr>
-                <td>{{ $archive->nomor_surat }}</td>
-                <td class="text-muted">{{ optional($archive->tanggal_surat)->format('d M Y') }}</td>
-                <td><span class="{{ $jenisClass }}">{{ $archive->jenis ?? '-' }}</span></td>
-                <td class="text-muted">{{ $archive->perihal }}</td>
-                <td class="text-muted">{{ $archive->instansi ?? '-' }}</td>
-                <td><span class="{{ $statusClass }}">{{ ucfirst($archive->status ?? '-') }}</span></td>
-                <td class="text-end">
-                  <a class="btn btn-sm fw-bold !text-white !bg-orange-500 hover:!bg-orange-600 !border-0" href="{{ $detailUrl }}">Lihat Detail</a>
+              <tr class="hover:bg-orange-50/30 transition-colors">
+                <td class="py-4 px-5 font-bold text-gray-900">{{ $archive->nomor_surat }}</td>
+                <td class="py-4 px-5 text-gray-500 whitespace-nowrap" data-sort-value="{{ optional($archive->tanggal_surat)->format('Y-m-d') }}">{{ optional($archive->tanggal_surat)->format('d M Y') }}</td>
+                <td class="py-4 px-5"><span class="{{ $jenisClass }} whitespace-nowrap">{{ $archive->jenis ?? '-' }}</span></td>
+                <td class="py-4 px-5 text-gray-600">{{ $archive->perihal }}</td>
+                <td class="py-4 px-5 text-gray-500">{{ $archive->instansi ?? '-' }}</td>
+                <td class="py-4 px-5 text-center">
+                  <a class="inline-block bg-orange-500 text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-orange-600 transition no-underline" href="{{ $detailUrl }}">Detail</a>
                 </td>
               </tr>
-            @empty
+              @empty
               <tr>
-                <td class="text-muted text-center" colspan="7">Belum ada arsip yang sesuai.</td>
+                <td class="py-8 px-5 text-center text-gray-400" colspan="6">Belum ada arsip yang sesuai.</td>
               </tr>
-            @endforelse
-          </tbody>
-        </table>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-center px-3 py-3">
-        <div class="text-muted small fw-bold">
-          @if ($archives->total() > 0)
-            Menampilkan hasil dari {{ $archives->firstItem() }} sampai {{ $archives->lastItem() }}
-          @else
-            Belum ada hasil
-          @endif
+              @endforelse
+            </tbody>
+          </table>
         </div>
-        <nav>
-          <ul class="pagination pagination-sm mb-0">
-            <li class="page-item {{ $archives->onFirstPage() ? 'disabled' : '' }}">
-              <a class="page-link" href="{{ $archives->previousPageUrl() ?? '#' }}" aria-label="Prev">
-                <i class="bi bi-chevron-left"></i>
-              </a>
-            </li>
-            <li class="page-item active"><span class="page-link">{{ $archives->currentPage() }}</span></li>
-            <li class="page-item {{ $archives->hasMorePages() ? '' : 'disabled' }}">
-              <a class="page-link" href="{{ $archives->nextPageUrl() ?? '#' }}" aria-label="Next">
-                <i class="bi bi-chevron-right"></i>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </section>
 
-    @if ($canInputLetter)
-      <section class="card border-0 shadow-sm mt-3">
-        <div class="card-body">
-          <div class="fw-bold text-gray-900 mb-3">Aksi Cepat</div>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn text-white bg-[#ff7f00] hover:bg-[#f36f00] border-0 fw-bold" href="{{ route('tambah-surat-masuk') }}">
-              <i class="bi bi-inbox me-2"></i> Input Surat Masuk
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-gray-100">
+          <div class="text-gray-500 text-sm">
+            @if ($archives->total() > 0)
+            Menampilkan {{ $archives->firstItem() }}-{{ $archives->lastItem() }} dari {{ $archives->total() }} arsip
+            @else
+            Belum ada hasil
+            @endif
+          </div>
+          <div class="flex items-center gap-1">
+            <a href="{{ $archives->previousPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $archives->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }} no-underline">
+              <i class="bi bi-chevron-left"></i>
             </a>
-            <a class="btn text-white bg-[#4b5563] hover:bg-[#374151] border-0 fw-bold" href="{{ route('tambah-surat-keluar') }}">
-              <i class="bi bi-send me-2"></i> Buat Surat Keluar
+            <span class="w-9 h-9 flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm">{{ $archives->currentPage() }}</span>
+            <a href="{{ $archives->nextPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $archives->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }} no-underline">
+              <i class="bi bi-chevron-right"></i>
             </a>
           </div>
         </div>
       </section>
-    @endif
-  </main>
+
+      @if ($canInputLetter)
+      <section class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
+        <div class="font-bold text-gray-900 mb-3">Aksi Cepat</div>
+        <div class="flex flex-wrap gap-3">
+          <a class="inline-flex items-center bg-orange-500 text-white font-bold py-2.5 px-5 rounded-xl hover:bg-orange-600 shadow-orange transition text-sm no-underline" href="{{ route('tambah-surat-masuk') }}">
+            <i class="bi bi-inbox me-2"></i> Input Surat Masuk
+          </a>
+          <a class="inline-flex items-center bg-gray-700 text-white font-bold py-2.5 px-5 rounded-xl hover:bg-gray-800 transition text-sm no-underline" href="{{ route('tambah-surat-keluar') }}">
+            <i class="bi bi-send me-2"></i> Buat Surat Keluar
+          </a>
+        </div>
+      </section>
+      @endif
+    </main>
+  </div>
 </x-app-layout>
-
-
-
-

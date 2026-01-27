@@ -94,12 +94,12 @@
 
         <!-- Center: menu -->
         <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-gray-700">
-          <a href="#" class="hover:text-gray-900">Beranda</a>
-          <a href="#" class="hover:text-gray-900">Surat Masuk</a>
-          <a href="#" class="hover:text-gray-900">Surat Keluar</a>
-          <a href="#" class="hover:text-gray-900">Tentang</a>
-          <a href="#" class="hover:text-gray-900">Manfaat</a>
-          <a href="#" class="hover:text-gray-900">Kontak</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Beranda</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Surat Masuk</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Surat Keluar</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Tentang</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Manfaat</a>
+          <a href="#" class="text-gray-700 no-underline hover:text-gray-900">Kontak</a>
         </nav>
 
         <!-- Right: icons + user -->
@@ -136,7 +136,7 @@
   <main class="flex-1">
     <div class="max-w-7xl mx-auto px-6 py-8">
       <!-- back -->
-      <a href="#" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium">
+      <a href="#" class="inline-flex items-center gap-2 text-gray-600 no-underline hover:text-gray-900 font-medium">
         <i class="fa-solid fa-arrow-left text-sm"></i>
         <span>Kembali</span>
       </a>
@@ -284,20 +284,20 @@
         <div class="md:col-span-2">
           <div class="font-semibold mb-3">Menu Utama</div>
           <ul class="space-y-2 text-sm text-white/70">
-            <li><a href="#" class="hover:text-white">Beranda</a></li>
-            <li><a href="#" class="hover:text-white">Tentang Sistem</a></li>
-            <li><a href="#" class="hover:text-white">Manfaat</a></li>
-            <li><a href="#" class="hover:text-white">Kontak</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Beranda</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Tentang Sistem</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Manfaat</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Kontak</a></li>
           </ul>
         </div>
 
         <div class="md:col-span-2">
           <div class="font-semibold mb-3">Layanan</div>
           <ul class="space-y-2 text-sm text-white/70">
-            <li><a href="#" class="hover:text-white">Surat Masuk</a></li>
-            <li><a href="#" class="hover:text-white">Surat Keluar</a></li>
-            <li><a href="#" class="hover:text-white">Arsip Digital</a></li>
-            <li><a href="#" class="hover:text-white">Laporan</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Surat Masuk</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Surat Keluar</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Arsip Digital</a></li>
+            <li><a href="#" class="text-white/70 no-underline hover:text-white">Laporan</a></li>
           </ul>
         </div>
 
@@ -306,11 +306,11 @@
           <ul class="space-y-3 text-sm text-white/70">
             <li class="flex gap-3">
               <i class="fa-solid fa-location-dot mt-1 text-[var(--brand)]"></i>
-              <span>Jl. Dokter Susilo No. 2, Kelurahan Sumur Batu, Kecamatan Teluk Betung Utara, Kota Bandar Lampung, Lampung</span>
+              <span>Jl. Dokter Susilo No. 2, Kota Bandar Lampung</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="fa-solid fa-phone text-[var(--brand)]"></i>
-              <span>(0721) 481544</span>
+              <span>(0721) 476838</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="fa-solid fa-envelope text-[var(--brand)]"></i>

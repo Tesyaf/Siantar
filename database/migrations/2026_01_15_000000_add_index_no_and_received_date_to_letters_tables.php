@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('incoming_letters', function (Blueprint $table) {
-            $table->text('final_direction')->nullable()->after('instruction');
+            $table->unsignedInteger('index_no')->nullable()->index();
+        });
+
+        Schema::table('outgoing_letters', function (Blueprint $table) {
+            $table->date('received_date')->nullable()->index();
+            $table->unsignedInteger('index_no')->nullable()->index();
         });
     }
 
@@ -22,7 +27,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('incoming_letters', function (Blueprint $table) {
-            $table->dropColumn('final_direction');
+            $table->dropColumn('index_no');
+        });
+
+        Schema::table('outgoing_letters', function (Blueprint $table) {
+            $table->dropColumn(['received_date', 'index_no']);
         });
     }
 };

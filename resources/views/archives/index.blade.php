@@ -8,17 +8,42 @@
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('archives.create') }}" class="btn btn-primary mb-3">Buat Arsip Baru</a>
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ route('archives.create') }}" class="btn btn-primary">Buat Arsip Baru</a>
+        <a href="{{ route('laporan.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-file-earmark-bar-graph me-1"></i> Buat Laporan
+        </a>
+    </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" data-sortable>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Nomor</th>
-                <th>Tanggal</th>
-                <th>Perihal</th>
-                <th>Pengirim</th>
-                <th>Aksi</th>
+                <th data-sortable-col data-sort-type="number">
+                    <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                        No <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th data-sortable-col>
+                    <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                        Nomor <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th data-sortable-col data-sort-type="date">
+                    <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                        Tanggal <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th data-sortable-col>
+                    <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                        Perihal <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th data-sortable-col>
+                    <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-bold" data-sort-button>
+                        Pengirim <span class="text-muted ms-1" data-sort-indicator>↕</span>
+                    </button>
+                </th>
+                <th class="text-muted"></th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +51,7 @@
             <tr>
                 <td>{{ $loop->iteration + ($archives->currentPage()-1)*$archives->perPage() }}</td>
                 <td>{{ $archive->nomor_surat }}</td>
-                <td>{{ optional($archive->tanggal_surat)->format('Y-m-d') }}</td>
+                <td data-sort-value="{{ optional($archive->tanggal_surat)->format('Y-m-d') }}">{{ optional($archive->tanggal_surat)->format('Y-m-d') }}</td>
                 <td>{{ $archive->perihal }}</td>
                 <td>{{ $archive->pengirim }}</td>
                 <td>
@@ -50,5 +75,3 @@
     {{ $archives->links() }}
 </div>
 @endsection
-
-

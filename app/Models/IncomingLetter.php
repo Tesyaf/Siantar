@@ -3,17 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IncomingLetter extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'index_code',
         'received_date',
         'sender',
         'subject',
+        'index_no',
         'category',
         'summary',
-        'status',
         'letter_date',
         'letter_number',
         'forwarded_to',
@@ -24,6 +27,12 @@ class IncomingLetter extends Model
         'instruction_number',
         'package_number',
         'file_path',
+        'storage_disk',
+        'original_filename',
+        'file_mime',
+        'file_size',
+        'gdrive_file_id',
+        'gdrive_file_name',
         'user_id',
     ];
 

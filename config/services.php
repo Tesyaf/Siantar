@@ -35,4 +35,22 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Drive OAuth 2.0
+    |--------------------------------------------------------------------------
+    |
+    | Konfigurasi untuk integrasi Google Drive menggunakan OAuth 2.0.
+    | Refresh token digunakan untuk upload file atas nama akun Google tertentu.
+    |
+    */
+    'google' => [
+        'app_name' => env('GOOGLE_APP_NAME', 'SIANTAR'),
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'refresh_token' => env('GOOGLE_REFRESH_TOKEN'),
+        'folder_id' => env('GOOGLE_DRIVE_FOLDER_ID'),
+        'redirect_uri' => 'http://localhost/google/callback',
+    ],
+
 ];

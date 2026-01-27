@@ -50,13 +50,14 @@ class ArchiveController extends Controller
 
         if ($request->hasFile('lampiran')) {
             $file = $request->file('lampiran');
+            $disk = $this->lettersDiskName();
             
             // Simpan File Fisik
-            $path = $file->store('archives', 'public');
+            $path = $file->store('archives', $disk);
             
             // Simpan Metadata Lengkap
             $data['file_path'] = $path;
-            $data['storage_disk'] = 'public';
+            $data['storage_disk'] = $disk;
             $data['original_filename'] = $file->getClientOriginalName();
             $data['file_mime'] = $file->getMimeType();
             $data['file_size'] = $file->getSize();
@@ -103,10 +104,11 @@ class ArchiveController extends Controller
             }
 
             $file = $request->file('lampiran');
-            $path = $file->store('archives', 'public');
+            $disk = $this->lettersDiskName();
+            $path = $file->store('archives', $disk);
 
             $data['file_path'] = $path;
-            $data['storage_disk'] = 'public';
+            $data['storage_disk'] = $disk;
             $data['original_filename'] = $file->getClientOriginalName();
             $data['file_mime'] = $file->getMimeType();
             $data['file_size'] = $file->getSize();
@@ -154,5 +156,10 @@ class ArchiveController extends Controller
         }
 
         return Storage::disk($archive->storage_disk ?? 'public')->response($archive->file_path);
+    }
+
+    private function lettersDiskName(): string
+    {
+        return config('filesystems.letters_disk', 'public');
     }
 }

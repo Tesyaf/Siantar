@@ -20,7 +20,6 @@ class ArchiveSearchController extends Controller
             'letter_date as tanggal_surat',
             'subject as perihal',
             'sender as instansi',
-            'status',
             'category as folder',
             'created_at',
         ]);
@@ -33,7 +32,6 @@ class ArchiveSearchController extends Controller
             'letter_date as tanggal_surat',
             'subject as perihal',
             'recipient as instansi',
-            'status',
             'category as folder',
             'created_at',
         ]);
@@ -46,7 +44,6 @@ class ArchiveSearchController extends Controller
             'tanggal_surat',
             'perihal',
             DB::raw('COALESCE(pengirim, penerima) as instansi'),
-            'status',
             'folder',
             'created_at',
         ]);
@@ -70,10 +67,6 @@ class ArchiveSearchController extends Controller
 
         if ($request->filled('folder')) {
             $query->where('folder', $request->input('folder'));
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
         }
 
         if ($request->filled('date_start')) {
@@ -100,12 +93,6 @@ class ArchiveSearchController extends Controller
             ->unique()
             ->values();
 
-        $statusOptions = IncomingLetter::query()->whereNotNull('status')->distinct()->pluck('status')
-            ->merge(OutgoingLetter::query()->whereNotNull('status')->distinct()->pluck('status'))
-            ->merge(Archive::query()->whereNotNull('status')->distinct()->pluck('status'))
-            ->unique()
-            ->values();
-
-        return view('cari-arsip', compact('archives', 'jenisOptions', 'folderOptions', 'statusOptions'));
+        return view('cari-arsip', compact('archives', 'jenisOptions', 'folderOptions'));
     }
 }

@@ -1,166 +1,153 @@
-
 <x-app-layout>
-  @php
-    $statusClasses = [
-      'Menunggu' => 'badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle',
-      'Diproses' => 'badge rounded-pill bg-orange-100 text-orange-700 border border-orange-200',
-      'Terkirim' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-      'Selesai' => 'badge rounded-pill bg-success-subtle text-success border border-success-subtle',
-    ];
-  @endphp
+  <div class="min-h-screen bg-[#f5f7fb]">
+    <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
 
-  <main class="container py-4">
+      <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-500 font-semibold text-sm no-underline transition-colors">
+        <i class="bi bi-arrow-left"></i> Kembali ke Beranda
+      </a>
 
-    <a href="{{ route('dashboard') }}" class="text-muted text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 hover:text-gray-800">
-      <i class="bi bi-arrow-left"></i> Kembali
-    </a>
+      <h1 class="mt-4 mb-1 text-2xl font-extrabold text-gray-900">Surat Keluar</h1>
+      <p class="text-gray-500 text-sm mb-6">Daftar seluruh surat keluar yang Anda kirim</p>
 
-    <h1 class="mt-2 mb-1 text-3xl font-extrabold text-gray-900">Surat Keluar</h1>
-    <p class="text-gray-500 mb-4">Daftar seluruh surat keluar yang Anda kirim</p>
+      @if (session('success'))
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm mb-4">{{ session('success') }}</div>
+      @endif
+      @if (session('error'))
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm mb-4">{{ session('error') }}</div>
+      @endif
 
-    <div class="row g-3 align-items-stretch">
-      <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-bold">Total Surat Keluar</div>
-              <div class="fs-3 fw-bold text-gray-900">{{ $stats['total'] }}</div>
-            </div>
-            <div class="text-orange-500 fs-4"><i class="bi bi-send-fill"></i></div>
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex items-center justify-between">
+          <div>
+            <div class="text-gray-500 text-xs font-bold uppercase tracking-wide">Total Surat Keluar</div>
+            <div class="text-3xl font-extrabold text-gray-900 mt-1">{{ $stats['total'] }}</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
+            <i class="bi bi-send-fill text-orange-500 text-xl"></i>
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-bold">Menunggu Persetujuan</div>
-              <div class="fs-3 fw-bold text-gray-900">{{ $stats['pending'] }}</div>
+
+      <form x-data="{ loading: false }" x-ref="filterForm" class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 mb-4" method="GET" action="{{ route('surat-keluar.index') }}">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div class="md:col-span-5">
+            <label class="block text-xs font-bold text-gray-700 mb-2">Pencarian</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="bi bi-search"></i></span>
+              <input x-on:input.debounce.400ms="loading = true; $refs.filterForm.submit()" class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor surat atau perihal..." />
             </div>
-            <div class="text-warning fs-4"><i class="bi bi-clock-fill"></i></div>
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-xs font-bold text-gray-700 mb-2">Bulan</label>
+            <input x-on:change="loading = true; $refs.filterForm.submit()" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="month" name="month" value="{{ request('month') }}" />
+          </div>
+          <div class="md:col-span-4 flex items-end">
+            <a :class="{ 'opacity-50 pointer-events-none': loading }" class="w-full text-center bg-gray-100 text-gray-700 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-200 transition text-sm no-underline" href="{{ route('surat-keluar.index') }}">
+              <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+            </a>
           </div>
         </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
-          <div class="card-body d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-bold">Sudah Dikirim</div>
-              <div class="fs-3 fw-bold text-gray-900">{{ $stats['sent'] }}</div>
-            </div>
-            <div class="text-success fs-4"><i class="bi bi-check-circle-fill"></i></div>
-          </div>
+        <div x-show="loading" class="flex items-center justify-center mt-4">
+          <div class="animate-spin rounded-full h-5 w-5 border-2 border-orange-500 border-t-transparent"></div>
+          <span class="ml-2 text-sm text-gray-500">Memuat...</span>
         </div>
-      </div>
-    </div>
+      </form>
 
-    <div class="d-flex justify-content-end mt-3">
-      <button class="btn text-white bg-[#ff7f00] hover:bg-[#f36f00] border-0 fw-bold">
-        <i class="bi bi-list-task me-2"></i> Lihat Laporan Bulanan
-      </button>
-    </div>
-
-    <form class="card border-0 shadow-sm mt-4" method="GET" action="{{ route('surat-keluar.index') }}">
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-lg-6">
-            <div class="fw-bold text-gray-700 small mb-2">Pencarian</div>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-search"></i></span>
-              <input class="form-control" type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor surat atau perihal..." />
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="fw-bold text-gray-700 small mb-2">Status</div>
-            <select class="form-select" name="status">
-              <option value="">Semua Status</option>
-              @foreach ($statusOptions as $status)
-                <option value="{{ $status }}" @selected(request('status') === $status)>{{ $status }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="col-lg-3">
-            <div class="fw-bold text-gray-700 small mb-2">Tanggal</div>
-            <div class="input-group">
-              <input class="form-control" type="date" name="date" value="{{ request('date') }}" />
-              <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-            </div>
-          </div>
-          <div class="col-12 d-flex justify-content-end">
-            <button class="btn text-white bg-[#ff7f00] hover:bg-[#f36f00] border-0 fw-bold" type="submit">
-              <i class="bi bi-filter me-2"></i>Terapkan Filter
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <section class="card border-0 shadow-sm mt-4">
-      <div class="card-body p-0 p-lg-3">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th class="min-w-[140px]">Nomor Surat</th>
-                <th class="min-w-[120px]">Tanggal</th>
-                <th class="min-w-[160px]">Penerima</th>
-                <th>Perihal</th>
-                <th class="min-w-[120px] text-center">Status</th>
-                <th class="min-w-[130px] text-center">Aksi</th>
+      <section class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" data-sortable>
+            <thead>
+              <tr class="bg-gray-50 text-left">
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[110px]" data-sortable-col data-sort-type="number">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    No Index <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[140px]" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Nomor Surat <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[120px]" data-sortable-col data-sort-type="date">
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Tanggal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700 min-w-[160px]" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Penerima <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-700" data-sortable-col>
+                  <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                    Perihal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                  </button>
+                </th>
+                <th class="py-4 px-5 font-bold text-gray-400 text-center min-w-[130px]"></th>
               </tr>
             </thead>
-          <tbody>
-            @forelse ($letters as $letter)
-              @php
-                $status = $letter->status ?? 'Menunggu';
-              @endphp
-              <tr>
-                <td class="fw-bold">{{ $letter->letter_number }}</td>
-                <td class="text-muted">{{ optional($letter->letter_date)->format('d M Y') }}</td>
-                <td class="text-muted">{{ $letter->recipient }}</td>
-                <td class="text-muted">{{ $letter->subject }}</td>
-                <td class="text-center"><span class="{{ $statusClasses[$status] ?? $statusClasses['Menunggu'] }}">{{ $status }}</span></td>
-                <td class="text-center">
-                  <a class="btn btn-sm fw-bold !text-white !bg-orange-500 hover:!bg-orange-600 !border-0" href="{{ route('detail-surat-keluar', $letter) }}">Lihat Detail</a>
+            <tbody class="divide-y divide-gray-100">
+              @forelse ($letters as $letter)
+              <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="if(!event.target.closest('.action-menu')) window.location='{{ route('detail-surat-keluar', $letter) }}'">
+                <td class="py-4 px-5 text-gray-600">{{ $letter->index_no ?? '-' }}</td>
+                <td class="py-4 px-5 font-bold text-gray-900">{{ $letter->letter_number }}</td>
+                <td class="py-4 px-5 text-gray-500" data-sort-value="{{ optional($letter->letter_date)->format('Y-m-d') }}">{{ optional($letter->letter_date)->format('d M Y') }}</td>
+                <td class="py-4 px-5 text-gray-500">{{ $letter->recipient }}</td>
+                <td class="py-4 px-5 text-gray-600">{{ $letter->subject }}</td>
+                <td class="py-4 px-5 text-center">
+                  <div x-data="{ open: false }" class="relative inline-block action-menu">
+                    <button @click="open = !open" @click.outside="open = false" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                      <a href="{{ route('detail-surat-keluar', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                        <i class="bi bi-eye"></i> Lihat Detail
+                      </a>
+                      @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
+                      <a href="{{ route('surat-keluar.edit', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <form action="{{ route('surat-keluar.destroy', $letter) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                          <i class="bi bi-trash"></i> Hapus
+                        </button>
+                      </form>
+                      @endif
+                    </div>
+                  </div>
                 </td>
               </tr>
-            @empty
+              @empty
               <tr>
-                <td class="text-center text-muted" colspan="6">Belum ada surat keluar.</td>
+                <td class="py-8 px-5 text-center text-gray-400" colspan="6">Belum ada surat keluar.</td>
               </tr>
-            @endforelse
-          </tbody>
+              @endforelse
+            </tbody>
           </table>
         </div>
-      </div>
 
-      <div class="d-flex align-items-center justify-content-between mt-3 px-3 pb-3">
-        <div class="text-muted small">
-          @if ($letters->total() > 0)
+        <div class="flex items-center justify-between px-5 py-4 border-t border-gray-100">
+          <div class="text-gray-500 text-sm">
+            @if ($letters->total() > 0)
             Menampilkan {{ $letters->firstItem() }}-{{ $letters->lastItem() }} dari {{ $letters->total() }} surat keluar
-          @else
+            @else
             Belum ada surat keluar
-          @endif
+            @endif
+          </div>
+          <div class="flex items-center gap-1">
+            <a href="{{ $letters->previousPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }} no-underline">
+              <i class="bi bi-chevron-left"></i>
+            </a>
+            <span class="w-9 h-9 flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm">{{ $letters->currentPage() }}</span>
+            <a href="{{ $letters->nextPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }} no-underline">
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
         </div>
-        <nav>
-          <ul class="pagination pagination-sm mb-0">
-            <li class="page-item {{ $letters->onFirstPage() ? 'disabled' : '' }}">
-              <a class="page-link" href="{{ $letters->previousPageUrl() ?? '#' }}" aria-label="Prev">
-                <i class="bi bi-chevron-left"></i>
-              </a>
-            </li>
-            <li class="page-item active"><span class="page-link">{{ $letters->currentPage() }}</span></li>
-            <li class="page-item {{ $letters->hasMorePages() ? '' : 'disabled' }}">
-              <a class="page-link" href="{{ $letters->nextPageUrl() ?? '#' }}" aria-label="Next">
-                <i class="bi bi-chevron-right"></i>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </section>
+      </section>
 
-  </main>
+    </main>
+  </div>
 </x-app-layout>
-
-

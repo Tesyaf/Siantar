@@ -21,6 +21,3 @@
     <a href="{{ route('archives.index') }}" class="btn btn-secondary mt-3">Kembali</a>
 </div>
 @endsection
-
-
-

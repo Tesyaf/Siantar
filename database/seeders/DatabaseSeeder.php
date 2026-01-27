@@ -12,8 +12,5 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(LoginUserSeeder::class);
-
-        // Seed contoh arsip surat
-        $this->call(ArchiveSeeder::class);
     }
 }

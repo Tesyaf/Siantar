@@ -8,38 +8,37 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('archives', function (Blueprint $table) {
-            // use UUID primary key instead of incrementing integer
             $table->uuid('id')->primary();
             $table->string('nomor_surat')->unique();
-            $table->date('tanggal_surat')->nullable();
-            $table->string('jenis')->nullable(); // misal: masuk / keluar
-            $table->string('pengirim')->nullable();
-            $table->string('penerima')->nullable();
+            $table->date('tanggal_surat')->nullable()->index();
+            $table->string('jenis')->nullable()->index();
+            $table->string('pengirim')->nullable()->index();
+            $table->string('penerima')->nullable()->index();
             $table->string('perihal')->nullable();
             $table->text('ringkasan')->nullable();
-            $table->string('file_path')->nullable(); // path lampiran di storage
-            $table->string('folder')->nullable();
+            $table->string('file_path')->nullable();
+            $table->string('storage_disk')->default('public');
+            $table->string('original_filename')->nullable();
+            $table->string('file_mime')->nullable();
+            $table->unsignedBigInteger('file_size')->nullable();
+            $table->string('drive_file_id')->nullable()->index();
+            $table->string('drive_web_view_link')->nullable();
+            $table->string('folder')->nullable()->index();
             $table->string('tags')->nullable();
-            $table->string('status')->default('aktif'); // aktif / arsip
+            $table->string('status')->default('aktif')->index();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['tanggal_surat']);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('archives');
     }

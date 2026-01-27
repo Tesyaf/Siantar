@@ -59,8 +59,6 @@ class User extends Authenticatable
         return match ($role) {
             'admin' => 'Admin',
             'sekretariat' => 'Sekretariat',
-            'sekretaris' => 'Sekretaris',
-            'kepala_badan' => 'Kepala Badan',
             default => $role ? ucfirst(str_replace('_', ' ', $role)) : '-',
         };
     }

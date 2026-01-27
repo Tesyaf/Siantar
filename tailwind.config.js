@@ -12,17 +12,39 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Poppins', 'Figtree', ...defaultTheme.fontFamily.sans],
                 poppins: ['Poppins', 'sans-serif'],
             },
             colors: {
                 'brand-orange': '#FF7F00',
                 orange: {
-                    DEFAULT: '#FF7F00',
-                    300: '#FFB366',
+                    50: '#FFF7ED',
+                    100: '#FFEDD5',
+                    200: '#FED7AA',
+                    300: '#FDBA74',
+                    400: '#FB923C',
                     500: '#FF7F00',
-                    600: '#E67300',
-                }
+                    600: '#EA580C',
+                    700: '#C2410C',
+                    800: '#9A3412',
+                    900: '#7C2D12',
+                    DEFAULT: '#FF7F00',
+                },
+                primary: {
+                    50: '#FFF7ED',
+                    100: '#FFEDD5',
+                    200: '#FED7AA',
+                    300: '#FDBA74',
+                    400: '#FB923C',
+                    500: '#FF7F00',
+                    600: '#EA580C',
+                    700: '#C2410C',
+                    DEFAULT: '#FF7F00',
+                },
+            },
+            boxShadow: {
+                'orange': '0 4px 14px 0 rgba(255, 127, 0, 0.25)',
+                'orange-lg': '0 10px 25px -3px rgba(255, 127, 0, 0.3)',
             },
         },
     },

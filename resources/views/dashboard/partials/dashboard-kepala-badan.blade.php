@@ -9,35 +9,7 @@
         </section>
 
         <!-- OVERVIEW CARDS -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Surat Menunggu Persetujuan -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Menunggu Persetujuan</p>
-                        <p class="text-3xl font-bold text-purple-600 mt-2">{{ $incomingStats[1]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-600 grid place-items-center text-lg">
-                        <i class="bi bi-hourglass-split"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Surat masuk yang memerlukan tindakan</p>
-            </div>
-
-            <!-- Surat Diproses -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Sedang Diproses</p>
-                        <p class="text-3xl font-bold text-orange-600 mt-2">{{ $incomingStats[2]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-orange-100 text-orange-600 grid place-items-center text-lg">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Surat dalam proses penanganan</p>
-            </div>
-
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
             <!-- Total Surat Masuk -->
             <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
                 <div class="flex justify-between items-start">
@@ -69,7 +41,7 @@
 
         <!-- ACTIONS -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <a href="{{ route('surat-masuk.index') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
+            <a href="{{ route('surat-masuk.index') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] text-gray-900 no-underline hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 grid place-items-center">
                         <i class="bi bi-inbox"></i>
@@ -79,7 +51,7 @@
                 <p class="text-xs text-gray-500">Kelola dan berikan persetujuan surat masuk</p>
             </a>
 
-            <a href="{{ route('surat-keluar.index') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
+            <a href="{{ route('surat-keluar.index') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] text-gray-900 no-underline hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-lg bg-green-100 text-green-600 grid place-items-center">
                         <i class="bi bi-send"></i>
@@ -89,7 +61,7 @@
                 <p class="text-xs text-gray-500">Pantau dan persetujui surat keluar</p>
             </a>
 
-            <a href="{{ route('cari-arsip') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
+            <a href="{{ route('cari-arsip') }}" class="bg-white rounded-2xl p-6 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] text-gray-900 no-underline hover:border-purple-300 hover:shadow-[0_8px_20px_rgba(124,58,237,0.1)] transition">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 grid place-items-center">
                         <i class="bi bi-archive"></i>
@@ -114,7 +86,6 @@
                         <p class="text-sm font-medium text-gray-900">{{ $activity['title'] }}</p>
                         <p class="text-xs text-gray-500 mt-1">{{ $activity['time'] }}</p>
                     </div>
-                    <span class="text-xs px-2 py-1 rounded-full {{ $activity['pillClass'] }} border">{{ $activity['status'] }}</span>
                 </div>
                 @endforeach
             </div>

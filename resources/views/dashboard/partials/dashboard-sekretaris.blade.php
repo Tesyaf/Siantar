@@ -9,35 +9,7 @@
         </section>
 
         <!-- OVERVIEW CARDS -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Surat Masuk Baru -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Surat Masuk Baru</p>
-                        <p class="text-3xl font-bold text-cyan-600 mt-2">{{ $incomingStats[1]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-cyan-100 text-cyan-600 grid place-items-center text-lg">
-                        <i class="bi bi-envelope-exclamation"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Surat yang baru diterima</p>
-            </div>
-
-            <!-- Surat Keluar Menunggu -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Keluar Menunggu</p>
-                        <p class="text-3xl font-bold text-yellow-600 mt-2">{{ $outgoingStats[1]['value'] ?? 0 }}</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-lg bg-yellow-100 text-yellow-600 grid place-items-center text-lg">
-                        <i class="bi bi-clock-fill"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-3">Menunggu persetujuan</p>
-            </div>
-
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
             <!-- Total Surat Masuk -->
             <div class="bg-white rounded-2xl p-5 border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)]">
                 <div class="flex justify-between items-start">
@@ -71,7 +43,7 @@
         <section>
             <h6 class="font-bold mb-3">Aksi Cepat</h6>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <a href="{{ route('tambah-surat-masuk') }}" class="bg-cyan-50 border border-cyan-100 rounded-2xl p-4 flex gap-3 hover:border-cyan-200 hover:bg-cyan-100/70 transition">
+                <a href="{{ route('tambah-surat-masuk') }}" class="bg-cyan-50 border border-cyan-100 rounded-2xl p-4 flex gap-3 text-gray-900 no-underline hover:border-cyan-200 hover:bg-cyan-100/70 transition">
                     <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 grid place-items-center text-lg flex-shrink-0">
                         <i class="bi bi-plus-circle"></i>
                     </div>
@@ -81,17 +53,17 @@
                     </div>
                 </a>
 
-                <a href="{{ route('surat-keluar.index') }}" class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 flex gap-3 hover:border-yellow-200 hover:bg-yellow-100/70 transition">
+                <a href="{{ route('surat-keluar.index') }}" class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 flex gap-3 text-gray-900 no-underline hover:border-yellow-200 hover:bg-yellow-100/70 transition">
                     <div class="w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 grid place-items-center text-lg flex-shrink-0">
                         <i class="bi bi-arrow-up-right"></i>
                     </div>
                     <div>
                         <p class="font-extrabold text-sm">Lihat Surat Keluar</p>
-                        <p class="text-xs text-gray-500 mt-1">Pantau status</p>
+                        <p class="text-xs text-gray-500 mt-1">Pantau pengiriman</p>
                     </div>
                 </a>
 
-                <a href="{{ route('cari-arsip') }}" class="bg-teal-50 border border-teal-100 rounded-2xl p-4 flex gap-3 hover:border-teal-200 hover:bg-teal-100/70 transition">
+                <a href="{{ route('cari-arsip') }}" class="bg-teal-50 border border-teal-100 rounded-2xl p-4 flex gap-3 text-gray-900 no-underline hover:border-teal-200 hover:bg-teal-100/70 transition">
                     <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 grid place-items-center text-lg flex-shrink-0">
                         <i class="bi bi-search"></i>
                     </div>
@@ -112,7 +84,7 @@
                     </div>
                     <div>
                         <div class="text-[15px] font-extrabold">Detail Surat Masuk</div>
-                        <div class="text-xs text-gray-500 mt-1">Status dan informasi lengkap</div>
+                        <div class="text-xs text-gray-500 mt-1">Informasi lengkap surat masuk</div>
                     </div>
                 </div>
 
@@ -126,7 +98,7 @@
                 </div>
                 @endforeach
 
-                <a href="{{ route('surat-masuk.index') }}" class="mt-4 w-full rounded-xl bg-cyan-500 text-white font-bold py-2 hover:bg-cyan-600 text-center text-sm">
+                <a href="{{ route('surat-masuk.index') }}" class="mt-4 w-full rounded-xl bg-cyan-500 text-white font-bold py-2 hover:bg-cyan-600 text-center text-sm block no-underline">
                     Lihat Semua
                 </a>
             </div>
@@ -138,7 +110,7 @@
                     </div>
                     <div>
                         <div class="text-[15px] font-extrabold">Detail Surat Keluar</div>
-                        <div class="text-xs text-gray-500 mt-1">Status dan informasi lengkap</div>
+                        <div class="text-xs text-gray-500 mt-1">Informasi lengkap surat keluar</div>
                     </div>
                 </div>
 
@@ -154,7 +126,7 @@
                 </div>
                 @endforeach
 
-                <a href="{{ route('surat-keluar.index') }}" class="mt-4 w-full rounded-xl bg-cyan-500 text-white font-bold py-2 hover:bg-cyan-600 text-center text-sm">
+                <a href="{{ route('surat-keluar.index') }}" class="mt-4 w-full rounded-xl bg-cyan-500 text-white font-bold py-2 hover:bg-cyan-600 text-center text-sm block no-underline">
                     Lihat Semua
                 </a>
             </div>
@@ -165,26 +137,63 @@
         <section class="bg-white rounded-[14px] border border-[#e6eaf2] shadow-[0_8px_20px_rgba(17,24,39,0.05)] p-6">
             <h3 class="font-bold text-lg mb-4">Surat Terbaru</h3>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+                <table class="w-full text-sm table-fixed" data-sortable>
                     <thead>
                         <tr class="border-b border-gray-100">
-                            <th class="text-left py-3 px-3 font-bold text-gray-700">No. Surat</th>
-                            <th class="text-left py-3 px-3 font-bold text-gray-700">Tanggal</th>
-                            <th class="text-left py-3 px-3 font-bold text-gray-700">Perihal</th>
-                            <th class="text-left py-3 px-3 font-bold text-gray-700">Tipe</th>
-                            <th class="text-left py-3 px-3 font-bold text-gray-700">Status</th>
-                            <th class="text-center py-3 px-3 font-bold text-gray-700">Aksi</th>
+                            <th class="text-left py-3 px-3 font-bold text-gray-700" data-sortable-col>
+                                <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                    No. Surat <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                </button>
+                            </th>
+                            <th class="text-left py-3 px-3 font-bold text-gray-700" data-sortable-col data-sort-type="date">
+                                <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                    Tanggal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                </button>
+                            </th>
+                            <th class="text-left py-3 px-3 font-bold text-gray-700" data-sortable-col>
+                                <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                    Perihal <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                </button>
+                            </th>
+                            <th class="text-left py-3 px-3 font-bold text-gray-700" data-sortable-col>
+                                <button type="button" class="inline-flex items-center gap-2" data-sort-button>
+                                    Tipe <span class="text-xs text-gray-400" data-sort-indicator>↕</span>
+                                </button>
+                            </th>
+                            <th class="text-center py-3 px-3 font-bold text-gray-400 w-16"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($latestLetters as $letter)
                         <tr class="border-b border-gray-50 hover:bg-gray-50">
                             <td class="py-3 px-3 font-medium">{{ $letter['no'] }}</td>
-                            <td class="py-3 px-3 text-gray-600">{{ $letter['date'] }}</td>
+                            <td class="py-3 px-3 text-gray-600" data-sort-value="{{ $letter['date_sort'] ? \Carbon\Carbon::parse($letter['date_sort'])->format('Y-m-d') : '' }}">{{ $letter['date'] }}</td>
                             <td class="py-3 px-3 text-gray-700">{{ Str::limit($letter['subject'], 30) }}</td>
                             <td class="py-3 px-3"><span class="text-xs px-2 py-1 rounded-full {{ $letter['typeClass'] }}">{{ $letter['type'] }}</span></td>
-                            <td class="py-3 px-3"><span class="text-xs px-2 py-1 rounded-full border {{ $letter['statusClass'] }}">{{ $letter['status'] }}</span></td>
-                            <td class="py-3 px-3 text-center"><a href="{{ $letter['link'] }}" class="text-cyan-600 hover:text-cyan-700 font-semibold">Lihat</a></td>
+                            <td class="py-3 px-3 text-center w-16">
+                                <div x-data="{ open: false }" class="relative inline-block action-menu">
+                                    <button @click="open = !open" @click.outside="open = false" class="w-8 h-8 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                                        <a href="{{ $letter['link'] }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 no-underline">
+                                            <i class="bi bi-eye"></i> Lihat Detail
+                                        </a>
+                                        @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
+                                        <a href="{{ $letter['type'] === 'Masuk' ? route('surat-masuk.edit', $letter['id']) : route('surat-keluar.edit', $letter['id']) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 no-underline">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <form action="{{ $letter['type'] === 'Masuk' ? route('surat-masuk.destroy', $letter['id']) : route('surat-keluar.destroy', $letter['id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -10,8 +10,8 @@
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
             <div data-aos="fade-down" data-aos-duration="800" class="inline-flex items-center gap-2.5 pl-2 pr-5 py-1.5 rounded-full bg-black/30 backdrop-blur-md border border-white/20 mb-8">
-                <div class="flex items-center justify-center w-6 h-6 rounded-full border border-white/40 bg-white/10">
-                    <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                <div class="flex items-center justify-center w-6 h-6 rounded-full">
+                    <i class="fa-solid fa-landmark text-white/90"></i>
                 </div>
                 <span class="text-[11px] font-bold text-white/90 tracking-[0.1em] uppercase">Badan Kesatuan Bangsa dan Politik</span>
             </div>
@@ -62,7 +62,7 @@
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h4.753a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20" /></svg>
                     </div>
                     <h3 class="text-2xl font-bold mb-4">Surat Masuk</h3>
-                    <p class="text-gray-500 leading-relaxed">Pendaftaran dan pelacakan surat masuk secara digital dengan sistem disposisi otomatis dan notifikasi real-time.</p>
+                    <p class="text-gray-500 leading-relaxed">Pendaftaran surat masuk secara digital dengan sistem disposisi otomatis dan notifikasi real-time.</p>
                 </div>
                 <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition duration-300 group hover:-translate-y-2">
                     <div class="w-16 h-16 bg-brand-orange rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-orange/30 group-hover:scale-110 transition-transform">
@@ -70,7 +70,7 @@
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                     </div>
                     <h3 class="text-2xl font-bold mb-4">Surat Keluar</h3>
-                    <p class="text-gray-500 leading-relaxed">Pembuatan dan pengiriman surat keluar dengan sistem approval bertingkat dan tracking status pengiriman.</p>
+                    <p class="text-gray-500 leading-relaxed">Pembuatan dan pengiriman surat keluar dengan sistem approval bertingkat.</p>
                 </div>
                 <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition duration-300 group hover:-translate-y-2">
                     <div class="w-16 h-16 bg-brand-orange rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-orange/30 group-hover:scale-110 transition-transform">
@@ -193,7 +193,6 @@
 
 </div>
 </x-app-layout>
-
 
 
 
