@@ -26,7 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->environment('production')) {
+        // Force HTTPS for production and local environments (for Ngrok compatibility)
+        if ($this->app->environment('production') || $this->app->environment('local')) {
             URL::forceScheme('https');
         }
 
