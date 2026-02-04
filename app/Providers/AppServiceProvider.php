@@ -26,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Trust Ngrok proxy headers
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            URL::forceScheme($_SERVER['HTTP_X_FORWARDED_PROTO']);
+        }
+
+        // Force root URL from .env APP_URL
+        if ($appUrl = config('app.url')) {
+            URL::forceRootUrl($appUrl);
+        }
+
         // Force HTTPS for production and local environments (for Ngrok compatibility)
         if ($this->app->environment('production') || $this->app->environment('local')) {
             URL::forceScheme('https');
