@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\IncomingLetterController;
-use App\Http\Controllers\NotifikasiController;
+
 use App\Http\Controllers\OutgoingLetterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -62,8 +62,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('tambah-surat');
 
     Route::get('/cari-arsip', [ArchiveSearchController::class, 'index'])->name('cari-arsip');
-
-    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
 
     Route::get('/pengaturan', function () {
         return view('surat-masuk.pengaturan');
