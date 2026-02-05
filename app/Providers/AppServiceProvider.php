@@ -36,8 +36,8 @@ class AppServiceProvider extends ServiceProvider
             URL::forceRootUrl($appUrl);
         }
 
-        // Force HTTPS for production and local environments (for Ngrok compatibility)
-        if ($this->app->environment('production') || $this->app->environment('local')) {
+        // Force HTTPS only for production environment
+        if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
 
