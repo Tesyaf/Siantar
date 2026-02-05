@@ -532,6 +532,13 @@
     })();
   </script>
 
+  <!-- Cropper.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+  <style>
+    .cropper-container { max-height: 60vh !important; }
+    .scan-filter { filter: grayscale(100%) contrast(1.5) brightness(1.1); }
+  </style>
+
   <!-- Camera Modal -->
   <div id="camera-modal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center">
     <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden">
@@ -542,7 +549,8 @@
         </button>
       </div>
       <div class="p-5">
-        <div class="relative bg-black rounded-xl overflow-hidden aspect-video">
+        <!-- Camera View -->
+        <div id="camera-view" class="relative bg-black rounded-xl overflow-hidden aspect-[3/4] max-h-[70vh] mx-auto">
           <video id="camera-video" class="w-full h-full object-cover" autoplay playsinline></video>
           <canvas id="camera-canvas" class="hidden"></canvas>
           <div id="camera-loading" class="absolute inset-0 flex items-center justify-center bg-gray-900">
@@ -558,6 +566,49 @@
             </div>
           </div>
         </div>
+        <!-- Crop View -->
+        <div id="crop-view" class="hidden">
+          <div class="rounded-xl overflow-hidden bg-gray-100" style="max-height: 55vh;">
+            <img id="crop-image" class="max-w-full" />
+          </div>
+          <!-- Crop Controls -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
+            <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <button type="button" id="btn-zoom-out" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom Out">
+                <i class="bi bi-zoom-out"></i>
+              </button>
+              <button type="button" id="btn-zoom-in" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom In">
+                <i class="bi bi-zoom-in"></i>
+              </button>
+            </div>
+            <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <button type="button" id="btn-rotate-left" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Rotate Left">
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+              <button type="button" id="btn-rotate-right" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Rotate Right">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+            <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <button type="button" id="btn-flip-h" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Flip Horizontal">
+                <i class="bi bi-symmetry-vertical"></i>
+              </button>
+              <button type="button" id="btn-flip-v" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Flip Vertical">
+                <i class="bi bi-symmetry-horizontal"></i>
+              </button>
+            </div>
+            <button type="button" id="btn-reset-crop" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200 transition" title="Reset">
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
+          </div>
+          <div class="flex items-center justify-center gap-4 mt-2">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="scan-filter-toggle" class="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+              <span class="text-sm font-medium text-gray-700"><i class="bi bi-file-earmark-text me-1"></i>Filter Scan</span>
+            </label>
+          </div>
+        </div>
+        <!-- Preview -->
         <div id="camera-preview-container" class="hidden mt-4">
           <p class="text-sm text-gray-500 mb-2">Hasil foto:</p>
           <img id="camera-preview-img" class="rounded-xl border border-gray-200 max-h-48 mx-auto" />
@@ -570,6 +621,9 @@
         <button type="button" id="btn-capture" class="px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition">
           <i class="bi bi-camera me-2"></i>Ambil Foto
         </button>
+        <button type="button" id="btn-crop-done" class="hidden px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-600 transition">
+          <i class="bi bi-crop me-2"></i>Selesai Crop
+        </button>
         <button type="button" id="btn-use-photo" class="hidden px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-bold hover:bg-green-600 transition">
           <i class="bi bi-check-lg me-2"></i>Gunakan Foto
         </button>
@@ -577,6 +631,8 @@
     </div>
   </div>
 
+  <!-- Cropper.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
   <script>
     (() => {
       const btnOpenCamera = document.getElementById('btn-open-camera');
@@ -586,36 +642,54 @@
       const canvas = document.getElementById('camera-canvas');
       const btnCapture = document.getElementById('btn-capture');
       const btnRetake = document.getElementById('btn-retake');
+      const btnCropDone = document.getElementById('btn-crop-done');
       const btnUsePhoto = document.getElementById('btn-use-photo');
       const cameraLoading = document.getElementById('camera-loading');
       const cameraError = document.getElementById('camera-error');
+      const cameraView = document.getElementById('camera-view');
+      const cropView = document.getElementById('crop-view');
+      const cropImage = document.getElementById('crop-image');
+      const scanFilterToggle = document.getElementById('scan-filter-toggle');
       const previewContainer = document.getElementById('camera-preview-container');
       const previewImg = document.getElementById('camera-preview-img');
       const fileInput = document.getElementById('lampiran-file-masuk');
 
+      // Crop control buttons
+      const btnZoomIn = document.getElementById('btn-zoom-in');
+      const btnZoomOut = document.getElementById('btn-zoom-out');
+      const btnRotateLeft = document.getElementById('btn-rotate-left');
+      const btnRotateRight = document.getElementById('btn-rotate-right');
+      const btnFlipH = document.getElementById('btn-flip-h');
+      const btnFlipV = document.getElementById('btn-flip-v');
+      const btnResetCrop = document.getElementById('btn-reset-crop');
+
       let stream = null;
       let capturedBlob = null;
+      let cropper = null;
+      let scaleX = 1;
+      let scaleY = 1;
 
       const openCamera = async () => {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         cameraLoading.classList.remove('hidden');
         cameraError.classList.add('hidden');
+        cameraView.classList.remove('hidden');
+        cropView.classList.add('hidden');
         previewContainer.classList.add('hidden');
         btnCapture.classList.remove('hidden');
         btnRetake.classList.add('hidden');
+        btnCropDone.classList.add('hidden');
         btnUsePhoto.classList.add('hidden');
+        scanFilterToggle.checked = false;
 
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
               facingMode: 'environment',
-              width: {
-                ideal: 1920
-              },
-              height: {
-                ideal: 1080
-              }
+              aspectRatio: 3 / 4,
+              width: { ideal: 1080 },
+              height: { ideal: 1440 }
             },
             audio: false
           });
@@ -636,6 +710,10 @@
           stream = null;
         }
         video.srcObject = null;
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
         modal.classList.add('hidden');
         modal.classList.remove('flex');
         capturedBlob = null;
@@ -647,39 +725,95 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0);
 
-        canvas.toBlob((blob) => {
+        // Stop camera
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+        }
+
+        // Show crop view
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        cropImage.src = dataUrl;
+        cameraView.classList.add('hidden');
+        cropView.classList.remove('hidden');
+        btnCapture.classList.add('hidden');
+        btnRetake.classList.remove('hidden');
+        btnCropDone.classList.remove('hidden');
+
+        // Initialize cropper
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(cropImage, {
+          viewMode: 1,
+          dragMode: 'move',
+          aspectRatio: NaN,
+          autoCropArea: 1,
+          responsive: true,
+          background: false,
+        });
+      };
+
+      const cropDone = () => {
+        if (!cropper) return;
+
+        const croppedCanvas = cropper.getCroppedCanvas({
+          maxWidth: 2048,
+          maxHeight: 2048,
+          imageSmoothingQuality: 'high'
+        });
+
+        // Apply scan filter if enabled
+        if (scanFilterToggle.checked) {
+          const ctx = croppedCanvas.getContext('2d');
+          const imageData = ctx.getImageData(0, 0, croppedCanvas.width, croppedCanvas.height);
+          const data = imageData.data;
+          
+          for (let i = 0; i < data.length; i += 4) {
+            // Convert to grayscale
+            const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            // Apply contrast and brightness
+            let newVal = ((gray - 128) * 1.5) + 128 + 20;
+            newVal = Math.max(0, Math.min(255, newVal));
+            data[i] = data[i + 1] = data[i + 2] = newVal;
+          }
+          ctx.putImageData(imageData, 0, 0);
+        }
+
+        croppedCanvas.toBlob((blob) => {
           capturedBlob = blob;
           previewImg.src = URL.createObjectURL(blob);
+          cropView.classList.add('hidden');
           previewContainer.classList.remove('hidden');
-          btnCapture.classList.add('hidden');
-          btnRetake.classList.remove('hidden');
+          btnCropDone.classList.add('hidden');
           btnUsePhoto.classList.remove('hidden');
-
-          // Pause video
-          if (stream) {
-            stream.getTracks().forEach(track => track.stop());
+          if (cropper) {
+            cropper.destroy();
+            cropper = null;
           }
         }, 'image/jpeg', 0.9);
       };
 
       const retakePhoto = async () => {
         capturedBlob = null;
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+        cropView.classList.add('hidden');
         previewContainer.classList.add('hidden');
+        cameraView.classList.remove('hidden');
         btnCapture.classList.remove('hidden');
         btnRetake.classList.add('hidden');
+        btnCropDone.classList.add('hidden');
         btnUsePhoto.classList.add('hidden');
+        scanFilterToggle.checked = false;
 
-        // Restart camera
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
               facingMode: 'environment',
-              width: {
-                ideal: 1920
-              },
-              height: {
-                ideal: 1080
-              }
+              aspectRatio: 3 / 4,
+              width: { ideal: 1080 },
+              height: { ideal: 1440 }
             },
             audio: false
           });
@@ -693,26 +827,53 @@
         if (!capturedBlob) return;
 
         const fileName = `foto_surat_${Date.now()}.jpg`;
-        const file = new File([capturedBlob], fileName, {
-          type: 'image/jpeg'
-        });
+        const file = new File([capturedBlob], fileName, { type: 'image/jpeg' });
 
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
 
-        // Trigger change event
-        fileInput.dispatchEvent(new Event('change', {
-          bubbles: true
-        }));
-
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
         closeCamera();
       };
+
+      // Toggle scan filter preview
+      scanFilterToggle.addEventListener('change', () => {
+        if (cropper) {
+          cropImage.classList.toggle('scan-filter', scanFilterToggle.checked);
+        }
+      });
+
+      // Crop control handlers
+      btnZoomIn.addEventListener('click', () => { if (cropper) cropper.zoom(0.1); });
+      btnZoomOut.addEventListener('click', () => { if (cropper) cropper.zoom(-0.1); });
+      btnRotateLeft.addEventListener('click', () => { if (cropper) cropper.rotate(-90); });
+      btnRotateRight.addEventListener('click', () => { if (cropper) cropper.rotate(90); });
+      btnFlipH.addEventListener('click', () => {
+        if (cropper) {
+          scaleX = -scaleX;
+          cropper.scaleX(scaleX);
+        }
+      });
+      btnFlipV.addEventListener('click', () => {
+        if (cropper) {
+          scaleY = -scaleY;
+          cropper.scaleY(scaleY);
+        }
+      });
+      btnResetCrop.addEventListener('click', () => {
+        if (cropper) {
+          cropper.reset();
+          scaleX = 1;
+          scaleY = 1;
+        }
+      });
 
       btnOpenCamera.addEventListener('click', openCamera);
       btnCloseCamera.addEventListener('click', closeCamera);
       btnCapture.addEventListener('click', capturePhoto);
       btnRetake.addEventListener('click', retakePhoto);
+      btnCropDone.addEventListener('click', cropDone);
       btnUsePhoto.addEventListener('click', usePhoto);
 
       // Close modal on backdrop click
