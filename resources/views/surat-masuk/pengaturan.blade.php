@@ -176,7 +176,7 @@
         <div class="orange-bar mt-1"></div>
         <div>
           <h1 class="text-[34px] font-bold leading-tight">Pengaturan Akun</h1>
-          <p class="text-gray-500 text-[14px] mt-1">Atur preferensi akun, keamanan, dan notifikasi Anda.</p>
+          <p class="text-gray-500 text-[14px] mt-1">Atur prefensi dan keamanan akun anda.</p>
         </div>
       </div>
 
@@ -200,24 +200,11 @@
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <div class="text-xs text-gray-500 mb-2">Bahasa Sistem</div>
-                <div class="select-wrap">
-                  <select class="select-like appearance-none">
-                    <option selected>Bahasa Indonesia</option>
-                    <option>English</option>
-                  </select>
-                  <i class="fa-solid fa-chevron-down chev"></i>
-                </div>
+                <div class="input-like flex items-center">Bahasa Indonesia</div>
               </div>
               <div>
                 <div class="text-xs text-gray-500 mb-2">Zona Waktu</div>
-                <div class="select-wrap">
-                  <select class="select-like appearance-none">
-                    <option selected>WIB (Waktu Indonesia Barat)</option>
-                    <option>WITA (Waktu Indonesia Tengah)</option>
-                    <option>WIT (Waktu Indonesia Timur)</option>
-                  </select>
-                  <i class="fa-solid fa-chevron-down chev"></i>
-                </div>
+                <div class="input-like flex items-center">WIB (Waktu Indonesia Barat)</div>
               </div>
             </div>
           </div>
@@ -269,114 +256,6 @@
               </div>
 
               <button class="btn-orange mt-1" type="button">Perbarui Kata Sandi</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Notifikasi -->
-        <section class="section-card mx-6 mb-6" data-accordion="true" data-open="true">
-          <div class="section-head">
-            <div class="flex items-center gap-4">
-              <div class="icon-box">
-                <i class="fa-solid fa-bell"></i>
-              </div>
-              <div class="font-semibold">Notifikasi</div>
-            </div>
-            <div class="caret"><i class="fa-solid fa-chevron-up"></i></div>
-          </div>
-
-          <div class="section-body">
-            <div class="divide-y divide-gray-100 rounded-xl overflow-hidden border border-gray-100">
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Notifikasi Surat Masuk</div>
-                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan saat surat masuk baru diterima</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Notifikasi Surat Keluar</div>
-                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan saat surat keluar dikirim</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Notifikasi Perubahan Surat</div>
-                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan ketika data surat diperbarui</div>
-                </div>
-                <button class="toggle" data-on="false" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Notifikasi Sistem</div>
-                  <div class="text-xs text-gray-500 mt-1">Pemberitahuan terkait pembaruan atau informasi sistem</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-            </div>
-
-            <div class="info mt-4">
-              <i class="fa-solid fa-circle-info mt-[2px]"></i>
-              <div>Pengaturan ini membantu Anda memilih jenis notifikasi yang ingin diterima.</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Privasi -->
-        <section class="section-card mx-6 mb-6" data-accordion="true" data-open="true">
-          <div class="section-head">
-            <div class="flex items-center gap-4">
-              <div class="icon-box">
-                <i class="fa-solid fa-user-shield"></i>
-              </div>
-              <div class="font-semibold">Privasi</div>
-            </div>
-            <div class="caret"><i class="fa-solid fa-chevron-up"></i></div>
-          </div>
-
-          <div class="section-body">
-            <div class="divide-y divide-gray-100 rounded-xl overflow-hidden border border-gray-100">
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Tampilkan Nama Lengkap</div>
-                  <div class="text-xs text-gray-500 mt-1">Nama lengkap Anda dapat dilihat oleh pengguna lain dalam sistem</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Tampilkan Email</div>
-                  <div class="text-xs text-gray-500 mt-1">Alamat email ditampilkan pada informasi akun</div>
-                </div>
-                <button class="toggle" data-on="false" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Tampilkan Unit Kerja</div>
-                  <div class="text-xs text-gray-500 mt-1">Unit kerja ditampilkan pada profil pengguna</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-
-              <div class="flex items-center justify-between py-4 px-4">
-                <div>
-                  <div class="text-sm font-semibold text-gray-700">Izinkan Notifikasi Email</div>
-                  <div class="text-xs text-gray-500 mt-1">Menerima notifikasi sistem melalui email</div>
-                </div>
-                <button class="toggle" data-on="true" type="button" onclick="toggleSwitch(this)"></button>
-              </div>
-            </div>
-
-            <div class="info mt-4">
-              <i class="fa-solid fa-circle-info mt-[2px]"></i>
-              <div>Pengaturan privasi membantu Anda mengontrol informasi pribadi yang ditampilkan pada sistem.</div>
             </div>
           </div>
         </section>

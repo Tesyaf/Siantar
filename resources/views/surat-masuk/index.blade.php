@@ -104,27 +104,29 @@
                 <td class="py-4 px-5 text-gray-500">{{ $letter->sender }}</td>
                 <td class="py-4 px-5 text-gray-600">{{ $letter->subject }}</td>
                 <td class="py-4 px-5 text-center">
-                  <div x-data="{ open: false }" class="relative inline-block action-menu">
-                    <button @click="open = !open" @click.outside="open = false" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
+                  <div x-data="actionDropdown()" class="relative inline-block action-menu">
+                    <button x-ref="button" @click="toggle" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-500">
                       <i class="bi bi-three-dots-vertical"></i>
                     </button>
-                    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
-                      <a href="{{ route('detail-surat-masuk', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
-                        <i class="bi bi-eye"></i> Lihat Detail
-                      </a>
-                      @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
-                      <a href="{{ route('surat-masuk.edit', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
-                        <i class="bi bi-pencil"></i> Edit
-                      </a>
-                      <form action="{{ route('surat-masuk.destroy', $letter) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
-                          <i class="bi bi-trash"></i> Hapus
-                        </button>
-                      </form>
-                      @endif
-                    </div>
+                    <template x-teleport="body">
+                      <div x-ref="menu" x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" @click.outside="close" :style="style" class="w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-[9999] overflow-hidden">
+                        <a href="{{ route('detail-surat-masuk', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                          <i class="bi bi-eye"></i> Lihat Detail
+                        </a>
+                        @if (auth()->user()->hasAnyRole(['sekretariat', 'admin']))
+                        <a href="{{ route('surat-masuk.edit', $letter) }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 no-underline">
+                          <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <form action="{{ route('surat-masuk.destroy', $letter) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                            <i class="bi bi-trash"></i> Hapus
+                          </button>
+                        </form>
+                        @endif
+                      </div>
+                    </template>
                   </div>
                 </td>
               </tr>
