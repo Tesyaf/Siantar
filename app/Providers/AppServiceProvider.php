@@ -26,12 +26,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Trust Ngrok proxy headers
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            URL::forceScheme($_SERVER['HTTP_X_FORWARDED_PROTO']);
+        // Check if accessed via ngrok or other proxy
+        $isProxied = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) || isset($_SERVER['HTTP_X_FORWARDED_HOST']);
+
+        // Trust proxy headers and force correct URL when accessed via ngrok
+        if ($isProxied) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+                URL::forceScheme($_SERVER['HTTP_X_FORWARDED_PROTO']);
+            }
+            // Use APP_URL when accessed via proxy (ngrok)
+            if ($appUrl = config('app.url')) {
+                URL::forceRootUrl($appUrl);
+            }
         }
 
-        // Force HTTPS and root URL only for production environment
+        // Force HTTPS and root URL for production environment
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
             if ($appUrl = config('app.url')) {
