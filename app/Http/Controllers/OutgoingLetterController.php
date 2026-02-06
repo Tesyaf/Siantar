@@ -16,7 +16,8 @@ class OutgoingLetterController extends Controller
 {
     public function __construct(
         protected GoogleDriveService $googleDrive
-    ) {}
+    ) {
+    }
     public function index(Request $request)
     {
         $query = OutgoingLetter::query()->latest('letter_date');
@@ -54,14 +55,18 @@ class OutgoingLetterController extends Controller
 
         $defaultLetterDate = Carbon::today();
         $indexYear = $defaultLetterDate->year;
-        
+
         // Use letter_date for indexing if received_date is being phased out for outgoing letters
-        $nextIndexNo = (OutgoingLetter::query()
-            ->where(function($q) use ($indexYear) {
+        // Only count pure integer index_no values for auto-increment
+        $maxIndex = OutgoingLetter::query()
+            ->where(function ($q) use ($indexYear) {
                 $q->whereYear('received_date', $indexYear)
-                  ->orWhereYear('letter_date', $indexYear);
+                    ->orWhereYear('letter_date', $indexYear);
             })
-            ->max('index_no') ?? 0) + 1;
+            ->whereNotNull('index_no')
+            ->whereRaw("index_no REGEXP '^[0-9]+$'")
+            ->max(DB::raw('CAST(index_no AS UNSIGNED)'));
+        $nextIndexNo = ($maxIndex ?? 0) + 1;
 
         $defaultCategories = ['Undangan', 'Laporan', 'Permohonan'];
         $storedCategories = OutgoingLetter::query()
@@ -72,8 +77,11 @@ class OutgoingLetterController extends Controller
             ->pluck('category')
             ->all();
 
+        // Get max integer-only index_no per year
         $indexNoByYear = OutgoingLetter::query()
-            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(index_no) as max_index')
+            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(CAST(index_no AS UNSIGNED)) as max_index')
+            ->whereNotNull('index_no')
+            ->whereRaw("index_no REGEXP '^[0-9]+$'")
             ->groupBy('year')
             ->pluck('max_index', 'year')
             ->all();
@@ -112,7 +120,7 @@ class OutgoingLetterController extends Controller
             'letter_date' => ['required', 'date'],
             'received_date' => ['nullable', 'date'],
             'subject' => ['required', 'string', 'max:255'],
-            'index_no' => ['required', 'integer', 'min:1'],
+            'index_no' => ['required', 'string', 'max:20'],
             'category' => ['nullable', 'string', 'max:100'],
             'summary' => ['nullable', 'string'],
             'priority' => ['nullable', 'string', 'in:Biasa,Penting,Rahasia'],
@@ -124,7 +132,7 @@ class OutgoingLetterController extends Controller
         ]);
 
         $data['user_id'] = $request->user()->id;
-        
+
         // Default received_date to letter_date if not provided
         if (empty($data['received_date'])) {
             $data['received_date'] = $data['letter_date'];
@@ -132,7 +140,8 @@ class OutgoingLetterController extends Controller
 
         $receivedDate = Carbon::parse($data['received_date']);
         $indexYear = $receivedDate->year;
-        $indexNo = (int) $data['index_no'];
+        $indexNo = $data['index_no'];
+        $isIntegerIndex = preg_match('/^[0-9]+$/', $indexNo);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -181,12 +190,23 @@ class OutgoingLetterController extends Controller
         unset($data['custom_filename']);
 
         $outgoingLetter = null;
-        DB::transaction(function () use (&$data, $indexNo, $indexYear, &$outgoingLetter) {
-            OutgoingLetter::query()
-                ->whereYear('received_date', $indexYear)
-                ->whereNotNull('index_no')
-                ->where('index_no', '>=', $indexNo)
-                ->increment('index_no');
+        DB::transaction(function () use (&$data, $indexNo, $indexYear, $isIntegerIndex, &$outgoingLetter) {
+            // Only shift other indices if this is a pure integer index
+            if ($isIntegerIndex) {
+                $intIndexNo = (int) $indexNo;
+                // Get all letters with integer index_no >= new index and increment them
+                $lettersToShift = OutgoingLetter::query()
+                    ->whereYear('received_date', $indexYear)
+                    ->whereNotNull('index_no')
+                    ->whereRaw("index_no REGEXP '^[0-9]+$'")
+                    ->whereRaw('CAST(index_no AS UNSIGNED) >= ?', [$intIndexNo])
+                    ->get();
+
+                foreach ($lettersToShift as $letter) {
+                    $letter->index_no = (string) ((int) $letter->index_no + 1);
+                    $letter->save();
+                }
+            }
 
             $data['index_no'] = $indexNo;
             $outgoingLetter = OutgoingLetter::create($data);
@@ -217,8 +237,11 @@ class OutgoingLetterController extends Controller
 
         $attachment = $this->buildAttachment($outgoingLetter);
 
+        // Get max integer-only index_no per year
         $indexNoByYear = OutgoingLetter::query()
-            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(index_no) as max_index')
+            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(CAST(index_no AS UNSIGNED)) as max_index')
+            ->whereNotNull('index_no')
+            ->whereRaw("index_no REGEXP '^[0-9]+$'")
             ->groupBy('year')
             ->pluck('max_index', 'year')
             ->all();
@@ -246,7 +269,7 @@ class OutgoingLetterController extends Controller
             'letter_date' => ['required', 'date'],
             'received_date' => ['nullable', 'date'],
             'subject' => ['required', 'string', 'max:255'],
-            'index_no' => ['required', 'integer', 'min:1'],
+            'index_no' => ['required', 'string', 'max:20'],
             'category' => ['nullable', 'string', 'max:100'],
             'summary' => ['nullable', 'string'],
             'priority' => ['nullable', 'string', 'in:Biasa,Penting,Rahasia'],
@@ -280,27 +303,44 @@ class OutgoingLetterController extends Controller
         $oldYear = $outgoingLetter->received_date
             ? Carbon::parse($outgoingLetter->received_date)->year
             : null;
+        $wasIntegerIndex = $oldIndexNo && preg_match('/^[0-9]+$/', $oldIndexNo);
 
         $newReceivedDate = Carbon::parse($data['received_date']);
         $newYear = $newReceivedDate->year;
-        $newIndexNo = (int) $data['index_no'];
+        $newIndexNo = $data['index_no'];
+        $isIntegerIndex = preg_match('/^[0-9]+$/', $newIndexNo);
 
-        DB::transaction(function () use ($outgoingLetter, $data, $oldIndexNo, $oldYear, $newIndexNo, $newYear) {
-            if ($oldIndexNo && $oldYear !== null && ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo)) {
-                OutgoingLetter::query()
+        DB::transaction(function () use ($outgoingLetter, $data, $oldIndexNo, $oldYear, $newIndexNo, $newYear, $wasIntegerIndex, $isIntegerIndex) {
+            // Only shift indices for pure integer values
+            if ($wasIntegerIndex && $oldYear !== null && ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo)) {
+                $oldIntIndex = (int) $oldIndexNo;
+                $lettersToShift = OutgoingLetter::query()
                     ->whereYear('received_date', $oldYear)
                     ->whereNotNull('index_no')
-                    ->where('index_no', '>', $oldIndexNo)
-                    ->decrement('index_no');
+                    ->whereRaw("index_no REGEXP '^[0-9]+$'")
+                    ->whereRaw('CAST(index_no AS UNSIGNED) > ?', [$oldIntIndex])
+                    ->get();
+
+                foreach ($lettersToShift as $letter) {
+                    $letter->index_no = (string) ((int) $letter->index_no - 1);
+                    $letter->save();
+                }
             }
 
-            if ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo) {
-                OutgoingLetter::query()
+            if ($isIntegerIndex && ($oldYear !== $newYear || $oldIndexNo !== $newIndexNo)) {
+                $newIntIndex = (int) $newIndexNo;
+                $lettersToShift = OutgoingLetter::query()
                     ->whereYear('received_date', $newYear)
                     ->whereNotNull('index_no')
-                    ->where('index_no', '>=', $newIndexNo)
+                    ->whereRaw("index_no REGEXP '^[0-9]+$'")
+                    ->whereRaw('CAST(index_no AS UNSIGNED) >= ?', [$newIntIndex])
                     ->where('id', '!=', $outgoingLetter->id)
-                    ->increment('index_no');
+                    ->get();
+
+                foreach ($lettersToShift as $letter) {
+                    $letter->index_no = (string) ((int) $letter->index_no + 1);
+                    $letter->save();
+                }
             }
 
             $data['index_no'] = $newIndexNo;

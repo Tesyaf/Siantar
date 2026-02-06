@@ -14,7 +14,12 @@ Alpine.data('actionDropdown', () => ({
     toggle() {
         this.open = !this.open;
         if (this.open) {
-            this.$nextTick(() => this.updatePosition());
+            // Use requestAnimationFrame to ensure DOM has updated
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    this.updatePosition();
+                });
+            });
         }
     },
     close() {
@@ -28,33 +33,42 @@ Alpine.data('actionDropdown', () => ({
         }
 
         const buttonRect = button.getBoundingClientRect();
-        const menuRect = menu.getBoundingClientRect();
+        const menuWidth = 160; // Fixed menu width (w-40 = 10rem = 160px)
+        const menuHeight = menu.offsetHeight || 150; // Estimate if not available
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-        const scrollX = window.scrollX;
-        const scrollY = window.scrollY;
         const offset = 6;
         const padding = 8;
 
-        let top = buttonRect.bottom + offset + scrollY;
-        let left = buttonRect.right - menuRect.width + scrollX;
+        // Use fixed positioning (relative to viewport)
+        let top = buttonRect.bottom + offset;
+        let left = buttonRect.right - menuWidth;
 
-        if (left < padding + scrollX) {
-            left = padding + scrollX;
+        // Keep within viewport bounds
+        if (left < padding) {
+            left = padding;
         }
-        if (left + menuRect.width > scrollX + viewportWidth - padding) {
-            left = Math.max(padding + scrollX, scrollX + viewportWidth - menuRect.width - padding);
-        }
-        if (top + menuRect.height > scrollY + viewportHeight - padding) {
-            top = buttonRect.top + scrollY - menuRect.height - offset;
-        }
-        if (top < padding + scrollY) {
-            top = padding + scrollY;
+        if (left + menuWidth > viewportWidth - padding) {
+            left = Math.max(padding, viewportWidth - menuWidth - padding);
         }
 
-        this.style = `position: absolute; top: ${Math.round(top)}px; left: ${Math.round(left)}px;`;
+        // If menu would go below viewport, show above button
+        if (top + menuHeight > viewportHeight - padding) {
+            top = buttonRect.top - menuHeight - offset;
+        }
+        if (top < padding) {
+            top = padding;
+        }
+
+        this.style = `position: fixed; top: ${Math.round(top)}px; left: ${Math.round(left)}px; z-index: 9999;`;
     },
     init() {
+        const handleScroll = () => {
+            if (this.open) {
+                this.updatePosition();
+            }
+        };
+
         const handleResize = () => {
             if (this.open) {
                 this.updatePosition();
@@ -62,10 +76,15 @@ Alpine.data('actionDropdown', () => ({
         };
 
         window.addEventListener('resize', handleResize);
+        window.addEventListener('scroll', handleScroll, true);
 
         this.$watch('open', (value) => {
             if (value) {
-                this.$nextTick(() => this.updatePosition());
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        this.updatePosition();
+                    });
+                });
             }
         });
     },
@@ -76,11 +95,18 @@ AOS.init();
 
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', (event) => {
-        event.preventDefault();
-        const targetId = anchor.getAttribute('href')?.substring(1);
+        const href = anchor.getAttribute('href');
+        // Skip if href is just '#' or empty
+        if (!href || href === '#') {
+            return;
+        }
+
+        const targetId = href.substring(1);
         const targetElement = targetId ? document.getElementById(targetId) : null;
 
+        // Only prevent default and scroll if target element exists
         if (targetElement) {
+            event.preventDefault();
             targetElement.scrollIntoView({ behavior: 'smooth' });
         }
     });

@@ -1,7 +1,8 @@
 <x-app-layout>
   <div class="min-h-screen bg-[#f5f7fb]">
     <main class="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
-      <a href="{{ route('surat-masuk.index') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-500 font-semibold text-sm no-underline transition-colors">
+      <a href="{{ route('surat-masuk.index') }}"
+        class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-500 font-semibold text-sm no-underline transition-colors">
         <i class="bi bi-arrow-left"></i> Kembali ke Surat Masuk
       </a>
 
@@ -20,26 +21,43 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Surat <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="letter_number" value="{{ old('letter_number') }}" placeholder="Masukkan nomor surat" required />
+              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Surat <span
+                  class="text-red-500">*</span></label>
+              <input
+                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                name="letter_number" value="{{ old('letter_number') }}" placeholder="Masukkan nomor surat" required />
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">No Index <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="number" min="1" name="index_no" value="{{ old('index_no', $nextIndexNo) }}" placeholder="Nomor index" required />
+              <label class="block text-xs font-bold text-gray-700 mb-2">No Index <span
+                  class="text-red-500">*</span></label>
+              <input
+                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                type="text" name="index_no" value="{{ old('index_no', $nextIndexNo) }}"
+                placeholder="Contoh: 19 atau 19.1" required />
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Pengirim <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-gray-700 mb-2">Pengirim <span
+                  class="text-red-500">*</span></label>
               <div class="relative">
-                <input id="sender-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-16" name="sender" value="{{ old('sender') }}" placeholder="Nama instansi/organisasi pengirim" autocomplete="off" required />
-                <button type="button" data-clear-target="sender-input" class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden" aria-label="Hapus pengirim">
+                <input id="sender-input"
+                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-16"
+                  name="sender" value="{{ old('sender') }}" placeholder="Nama instansi/organisasi pengirim"
+                  autocomplete="off" required />
+                <button type="button" data-clear-target="sender-input"
+                  class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden"
+                  aria-label="Hapus pengirim">
                   <i class="bi bi-x-lg"></i>
                 </button>
-                <button type="button" id="sender-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition" aria-label="Tampilkan daftar pengirim">
+                <button type="button" id="sender-toggle"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition"
+                  aria-label="Tampilkan daftar pengirim">
                   <i class="bi bi-chevron-down"></i>
                 </button>
-                <div id="sender-dropdown" class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
+                <div id="sender-dropdown"
+                  class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
                   @foreach ($senderOptions ?? [] as $senderOption)
-                    <button type="button" class="sender-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                    <button type="button"
+                      class="sender-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
                       {{ $senderOption }}
                     </button>
                   @endforeach
@@ -48,31 +66,50 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Surat <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="letter_date" value="{{ old('letter_date') }}" required />
+              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Surat <span
+                  class="text-red-500">*</span></label>
+              <input
+                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                type="date" name="letter_date" value="{{ old('letter_date') }}" required />
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Diterima <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="received_date" value="{{ old('received_date', $defaultReceivedDate->format('Y-m-d')) }}" required />
+              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Diterima <span
+                  class="text-red-500">*</span></label>
+              <input
+                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                type="date" name="received_date"
+                value="{{ old('received_date', $defaultReceivedDate->format('Y-m-d')) }}" required />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Jenis Surat <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50" value="Surat Masuk" readonly />
+              <label class="block text-xs font-bold text-gray-700 mb-2">Jenis Surat <span
+                  class="text-red-500">*</span></label>
+              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50" value="Surat Masuk"
+                readonly />
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span
+                  class="text-red-500">*</span></label>
               <div class="relative">
-                <input id="category-input" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-16" name="category" value="{{ old('category') }}" placeholder="Pilih atau ketik kategori surat" autocomplete="off" required />
-                <button type="button" data-clear-target="category-input" class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden" aria-label="Hapus kategori">
+                <input id="category-input"
+                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition pr-16"
+                  name="category" value="{{ old('category') }}" placeholder="Pilih atau ketik kategori surat"
+                  autocomplete="off" required />
+                <button type="button" data-clear-target="category-input"
+                  class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 hover:text-orange-500 transition hidden"
+                  aria-label="Hapus kategori">
                   <i class="bi bi-x-lg"></i>
                 </button>
-                <button type="button" id="category-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition" aria-label="Tampilkan daftar kategori">
+                <button type="button" id="category-toggle"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition"
+                  aria-label="Tampilkan daftar kategori">
                   <i class="bi bi-chevron-down"></i>
                 </button>
-                <div id="category-dropdown" class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
+                <div id="category-dropdown"
+                  class="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-auto hidden">
                   @foreach ($categories as $category)
-                    <button type="button" class="category-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                    <button type="button"
+                      class="category-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
                       {{ $category }}
                     </button>
                   @endforeach
@@ -81,14 +118,21 @@
             </div>
 
             <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-700 mb-2">Perihal <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="subject" value="{{ old('subject') }}" placeholder="Masukkan perihal surat" required />
+              <label class="block text-xs font-bold text-gray-700 mb-2">Perihal <span
+                  class="text-red-500">*</span></label>
+              <input
+                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                name="subject" value="{{ old('subject') }}" placeholder="Masukkan perihal surat" required />
             </div>
 
             <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-700 mb-2">Ringkasan Isi Surat <span class="text-gray-400 font-normal">(Opsional)</span></label>
-              <textarea class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="summary" rows="4" placeholder="Ringkasan singkat isi surat...">{{ old('summary') }}</textarea>
-              <div class="text-gray-400 text-xs flex items-center gap-2 mt-2"><i class="bi bi-info-circle"></i> Ringkasan isi surat digunakan sebagai gambaran umum isi dokumen.</div>
+              <label class="block text-xs font-bold text-gray-700 mb-2">Ringkasan Isi Surat <span
+                  class="text-gray-400 font-normal">(Opsional)</span></label>
+              <textarea
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                name="summary" rows="4" placeholder="Ringkasan singkat isi surat...">{{ old('summary') }}</textarea>
+              <div class="text-gray-400 text-xs flex items-center gap-2 mt-2"><i class="bi bi-info-circle"></i>
+                Ringkasan isi surat digunakan sebagai gambaran umum isi dokumen.</div>
             </div>
 
           </div>
@@ -102,17 +146,24 @@
             Lampiran Dokumen
           </div>
 
-          <div class="relative border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center bg-white transition hover:border-orange-300" data-upload>
-            <input type="file" id="lampiran-file-masuk" name="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" data-upload-input />
+          <div
+            class="relative border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center bg-white transition hover:border-orange-300"
+            data-upload>
+            <input type="file" id="lampiran-file-masuk" name="file" class="hidden"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" data-upload-input />
             <div class="flex flex-col items-center gap-3">
               <div class="text-4xl text-gray-300"><i class="bi bi-cloud-arrow-up"></i></div>
               <h6 class="font-bold text-gray-900">Unggah atau Ambil Foto Surat</h6>
               <p class="text-gray-400 text-sm">Format yang didukung: PDF, JPG, PNG, DOC, DOCX | Maksimal 10 MB</p>
               <div class="flex justify-center gap-3 mt-2">
-                <label class="inline-flex items-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 cursor-pointer transition" for="lampiran-file-masuk">
+                <label
+                  class="inline-flex items-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 cursor-pointer transition"
+                  for="lampiran-file-masuk">
                   <i class="bi bi-folder2-open me-2"></i>Pilih File
                 </label>
-                <button class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition" type="button" data-upload-ignore id="btn-open-camera">
+                <button
+                  class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition"
+                  type="button" data-upload-ignore id="btn-open-camera">
                   <i class="bi bi-camera me-2"></i>Buka Kamera
                 </button>
               </div>
@@ -123,26 +174,34 @@
               <div class="w-full max-w-md mt-3 hidden" id="custom-filename-wrapper">
                 <label class="block text-xs font-bold text-gray-700 mb-2 text-left">Nama File (opsional)</label>
                 <div class="flex items-center gap-2">
-                  <input type="text" name="custom_filename" id="custom-filename-input" class="flex-1 px-4 py-2 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" placeholder="Masukkan nama file..." />
+                  <input type="text" name="custom_filename" id="custom-filename-input"
+                    class="flex-1 px-4 py-2 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition"
+                    placeholder="Masukkan nama file..." />
                   <span id="file-extension" class="text-sm text-gray-500 font-mono">.pdf</span>
                 </div>
                 <p class="text-xs text-gray-400 mt-1 text-left">Kosongkan untuk menggunakan nama file asli</p>
               </div>
             </div>
-            <div class="absolute inset-0 rounded-2xl bg-orange-50/80 flex items-center justify-center opacity-0 transition-opacity pointer-events-none" data-drop-overlay>
+            <div
+              class="absolute inset-0 rounded-2xl bg-orange-50/80 flex items-center justify-center opacity-0 transition-opacity pointer-events-none"
+              data-drop-overlay>
               <span class="text-orange-700 font-bold text-sm">Drop file di sini</span>
             </div>
           </div>
 
           <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3 mt-4">
             <i class="bi bi-info-circle-fill text-blue-500 mt-0.5"></i>
-            <div class="text-sm text-blue-800"><strong>Tips:</strong> Gunakan fitur kamera untuk memotret surat fisik jika belum tersedia dalam bentuk file digital.</div>
+            <div class="text-sm text-blue-800"><strong>Tips:</strong> Gunakan fitur kamera untuk memotret surat fisik
+              jika belum tersedia dalam bentuk file digital.</div>
           </div>
         </section>
 
         <div class="flex justify-end gap-3 mt-6">
-          <a class="inline-flex items-center px-6 py-2.5 border border-gray-300 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 transition no-underline" href="{{ route('surat-masuk.index') }}">Batal</a>
-          <button class="inline-flex items-center px-6 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 shadow-orange transition" type="submit">
+          <a class="inline-flex items-center px-6 py-2.5 border border-gray-300 rounded-xl text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 transition no-underline"
+            href="{{ route('surat-masuk.index') }}">Batal</a>
+          <button
+            class="inline-flex items-center px-6 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 shadow-orange transition"
+            type="submit">
             <i class="bi bi-floppy me-2"></i> Simpan Surat Masuk
           </button>
         </div>
@@ -535,8 +594,13 @@
   <!-- Cropper.js CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
   <style>
-    .cropper-container { max-height: 60vh !important; }
-    .scan-filter { filter: grayscale(100%) contrast(1.5) brightness(1.1); }
+    .cropper-container {
+      max-height: 60vh !important;
+    }
+
+    .scan-filter {
+      filter: grayscale(100%) contrast(1.5) brightness(1.1);
+    }
   </style>
 
   <!-- Camera Modal -->
@@ -544,7 +608,8 @@
     <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <h3 class="font-bold text-gray-900">Ambil Foto Surat</h3>
-        <button type="button" id="btn-close-camera" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+        <button type="button" id="btn-close-camera"
+          class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
           <i class="bi bi-x-lg text-gray-500"></i>
         </button>
       </div>
@@ -555,7 +620,8 @@
           <canvas id="camera-canvas" class="hidden"></canvas>
           <div id="camera-loading" class="absolute inset-0 flex items-center justify-center bg-gray-900">
             <div class="text-center text-white">
-              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent mx-auto mb-2"></div>
+              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent mx-auto mb-2">
+              </div>
               <p class="text-sm">Mengakses kamera...</p>
             </div>
           </div>
@@ -574,37 +640,51 @@
           <!-- Crop Controls -->
           <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
             <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-              <button type="button" id="btn-zoom-out" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom Out">
+              <button type="button" id="btn-zoom-out"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom Out">
                 <i class="bi bi-zoom-out"></i>
               </button>
-              <button type="button" id="btn-zoom-in" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom In">
+              <button type="button" id="btn-zoom-in"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Zoom In">
                 <i class="bi bi-zoom-in"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-              <button type="button" id="btn-rotate-left" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Rotate Left">
+              <button type="button" id="btn-rotate-left"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition"
+                title="Rotate Left">
                 <i class="bi bi-arrow-counterclockwise"></i>
               </button>
-              <button type="button" id="btn-rotate-right" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Rotate Right">
+              <button type="button" id="btn-rotate-right"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition"
+                title="Rotate Right">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-              <button type="button" id="btn-flip-h" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Flip Horizontal">
+              <button type="button" id="btn-flip-h"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition"
+                title="Flip Horizontal">
                 <i class="bi bi-symmetry-vertical"></i>
               </button>
-              <button type="button" id="btn-flip-v" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition" title="Flip Vertical">
+              <button type="button" id="btn-flip-v"
+                class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white transition"
+                title="Flip Vertical">
                 <i class="bi bi-symmetry-horizontal"></i>
               </button>
             </div>
-            <button type="button" id="btn-reset-crop" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200 transition" title="Reset">
+            <button type="button" id="btn-reset-crop"
+              class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+              title="Reset">
               <i class="bi bi-arrow-repeat"></i>
             </button>
           </div>
           <div class="flex items-center justify-center gap-4 mt-2">
             <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="scan-filter-toggle" class="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
-              <span class="text-sm font-medium text-gray-700"><i class="bi bi-file-earmark-text me-1"></i>Filter Scan</span>
+              <input type="checkbox" id="scan-filter-toggle"
+                class="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+              <span class="text-sm font-medium text-gray-700"><i class="bi bi-file-earmark-text me-1"></i>Filter
+                Scan</span>
             </label>
           </div>
         </div>
@@ -615,16 +695,20 @@
         </div>
       </div>
       <div class="flex items-center justify-end gap-3 px-5 py-4 border-t border-gray-100">
-        <button type="button" id="btn-retake" class="hidden px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
+        <button type="button" id="btn-retake"
+          class="hidden px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
           <i class="bi bi-arrow-counterclockwise me-2"></i>Ulangi
         </button>
-        <button type="button" id="btn-capture" class="px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition">
+        <button type="button" id="btn-capture"
+          class="px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition">
           <i class="bi bi-camera me-2"></i>Ambil Foto
         </button>
-        <button type="button" id="btn-crop-done" class="hidden px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-600 transition">
+        <button type="button" id="btn-crop-done"
+          class="hidden px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-600 transition">
           <i class="bi bi-crop me-2"></i>Selesai Crop
         </button>
-        <button type="button" id="btn-use-photo" class="hidden px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-bold hover:bg-green-600 transition">
+        <button type="button" id="btn-use-photo"
+          class="hidden px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-bold hover:bg-green-600 transition">
           <i class="bi bi-check-lg me-2"></i>Gunakan Foto
         </button>
       </div>
@@ -766,7 +850,7 @@
           const ctx = croppedCanvas.getContext('2d');
           const imageData = ctx.getImageData(0, 0, croppedCanvas.width, croppedCanvas.height);
           const data = imageData.data;
-          
+
           for (let i = 0; i < data.length; i += 4) {
             // Convert to grayscale
             const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];

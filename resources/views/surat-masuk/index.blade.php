@@ -148,10 +148,54 @@
             @endif
           </div>
           <div class="flex items-center gap-1">
+            {{-- Previous Button --}}
             <a href="{{ $letters->previousPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }} no-underline">
               <i class="bi bi-chevron-left"></i>
             </a>
-            <span class="w-9 h-9 flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm">{{ $letters->currentPage() }}</span>
+            
+            {{-- Page Numbers --}}
+            @php
+              $currentPage = $letters->currentPage();
+              $lastPage = $letters->lastPage();
+              $start = max(1, $currentPage - 2);
+              $end = min($lastPage, $currentPage + 2);
+              
+              // Adjust range to always show 5 pages if possible
+              if ($end - $start < 4) {
+                if ($start == 1) {
+                  $end = min($lastPage, $start + 4);
+                } elseif ($end == $lastPage) {
+                  $start = max(1, $end - 4);
+                }
+              }
+            @endphp
+            
+            {{-- First page + ellipsis --}}
+            @if ($start > 1)
+              <a href="{{ $letters->url(1) }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">1</a>
+              @if ($start > 2)
+                <span class="w-6 text-center text-gray-400">...</span>
+              @endif
+            @endif
+            
+            {{-- Page number buttons --}}
+            @for ($page = $start; $page <= $end; $page++)
+              @if ($page == $currentPage)
+                <span class="w-9 h-9 flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm">{{ $page }}</span>
+              @else
+                <a href="{{ $letters->url($page) }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">{{ $page }}</a>
+              @endif
+            @endfor
+            
+            {{-- Last page + ellipsis --}}
+            @if ($end < $lastPage)
+              @if ($end < $lastPage - 1)
+                <span class="w-6 text-center text-gray-400">...</span>
+              @endif
+              <a href="{{ $letters->url($lastPage) }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">{{ $lastPage }}</a>
+            @endif
+            
+            {{-- Next Button --}}
             <a href="{{ $letters->nextPageUrl() ?? '#' }}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }} no-underline">
               <i class="bi bi-chevron-right"></i>
             </a>
