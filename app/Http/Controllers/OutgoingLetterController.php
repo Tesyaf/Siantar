@@ -52,10 +52,15 @@ class OutgoingLetterController extends Controller
             abort(403);
         }
 
-        $defaultReceivedDate = Carbon::today();
-        $indexYear = $defaultReceivedDate->year;
+        $defaultLetterDate = Carbon::today();
+        $indexYear = $defaultLetterDate->year;
+        
+        // Use letter_date for indexing if received_date is being phased out for outgoing letters
         $nextIndexNo = (OutgoingLetter::query()
-            ->whereYear('received_date', $indexYear)
+            ->where(function($q) use ($indexYear) {
+                $q->whereYear('received_date', $indexYear)
+                  ->orWhereYear('letter_date', $indexYear);
+            })
             ->max('index_no') ?? 0) + 1;
 
         $defaultCategories = ['Undangan', 'Laporan', 'Permohonan'];
@@ -68,8 +73,7 @@ class OutgoingLetterController extends Controller
             ->all();
 
         $indexNoByYear = OutgoingLetter::query()
-            ->selectRaw('YEAR(received_date) as year, MAX(index_no) as max_index')
-            ->whereNotNull('received_date')
+            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(index_no) as max_index')
             ->groupBy('year')
             ->pluck('max_index', 'year')
             ->all();
@@ -93,7 +97,7 @@ class OutgoingLetterController extends Controller
             ->pluck('recipient')
             ->all();
 
-        return view('tambah-surat-keluar', compact('categories', 'nextIndexNo', 'defaultReceivedDate', 'indexNoByYear', 'recipientOptions'));
+        return view('tambah-surat-keluar', compact('categories', 'nextIndexNo', 'defaultLetterDate', 'indexNoByYear', 'recipientOptions'));
     }
 
     public function store(Request $request)
@@ -106,7 +110,7 @@ class OutgoingLetterController extends Controller
             'letter_number' => ['required', 'string', 'max:100'],
             'recipient' => ['required', 'string', 'max:255'],
             'letter_date' => ['required', 'date'],
-            'received_date' => ['required', 'date'],
+            'received_date' => ['nullable', 'date'],
             'subject' => ['required', 'string', 'max:255'],
             'index_no' => ['required', 'integer', 'min:1'],
             'category' => ['nullable', 'string', 'max:100'],
@@ -120,6 +124,11 @@ class OutgoingLetterController extends Controller
         ]);
 
         $data['user_id'] = $request->user()->id;
+        
+        // Default received_date to letter_date if not provided
+        if (empty($data['received_date'])) {
+            $data['received_date'] = $data['letter_date'];
+        }
 
         $receivedDate = Carbon::parse($data['received_date']);
         $indexYear = $receivedDate->year;
@@ -209,8 +218,7 @@ class OutgoingLetterController extends Controller
         $attachment = $this->buildAttachment($outgoingLetter);
 
         $indexNoByYear = OutgoingLetter::query()
-            ->selectRaw('YEAR(received_date) as year, MAX(index_no) as max_index')
-            ->whereNotNull('received_date')
+            ->selectRaw('YEAR(COALESCE(received_date, letter_date)) as year, MAX(index_no) as max_index')
             ->groupBy('year')
             ->pluck('max_index', 'year')
             ->all();
@@ -236,7 +244,7 @@ class OutgoingLetterController extends Controller
             'letter_number' => ['required', 'string', 'max:100'],
             'recipient' => ['required', 'string', 'max:255'],
             'letter_date' => ['required', 'date'],
-            'received_date' => ['required', 'date'],
+            'received_date' => ['nullable', 'date'],
             'subject' => ['required', 'string', 'max:255'],
             'index_no' => ['required', 'integer', 'min:1'],
             'category' => ['nullable', 'string', 'max:100'],
@@ -247,6 +255,11 @@ class OutgoingLetterController extends Controller
             'package_number' => ['nullable', 'string', 'max:100'],
             'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx', 'max:20480'],
         ]);
+
+        // Default received_date to letter_date if not provided
+        if (empty($data['received_date'])) {
+            $data['received_date'] = $data['letter_date'];
+        }
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');

@@ -20,7 +20,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Urut Surat <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-gray-700 mb-2">Nomor Surat <span class="text-red-500">*</span></label>
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" name="letter_number" value="{{ old('letter_number') }}" placeholder="Masukkan nomor surat" required />
             </div>
             <div>
@@ -52,23 +52,10 @@
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="letter_date" value="{{ old('letter_date') }}" required />
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Tanggal Diterima <span class="text-red-500">*</span></label>
-              <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition" type="date" name="received_date" value="{{ old('received_date', $defaultReceivedDate->format('Y-m-d')) }}" required />
-            </div>
-            <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Jenis Surat <span class="text-red-500">*</span></label>
               <input class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50" value="Surat Keluar" readonly />
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-2">Sifat Surat <span class="text-red-500">*</span></label>
-              <select class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition appearance-none bg-white" name="priority">
-                <option value="" selected>Pilih sifat surat</option>
-                <option value="Biasa" @selected(old('priority')==='Biasa' )>Biasa</option>
-                <option value="Penting" @selected(old('priority')==='Penting' )>Penting</option>
-                <option value="Rahasia" @selected(old('priority')==='Rahasia' )>Rahasia</option>
-              </select>
-            </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-2">Kategori Surat <span class="text-red-500">*</span></label>
               <div class="relative">
@@ -167,15 +154,15 @@
   <script>
     (() => {
       const indexInput = document.querySelector('input[name="index_no"]');
-      const receivedInput = document.querySelector('input[name="received_date"]');
+      const letterDateInput = document.querySelector('input[name="letter_date"]');
       const indexNoByYear = @json($indexNoByYear ?? []);
-      if (!indexInput || !receivedInput) {
+      if (!indexInput || !letterDateInput) {
         return;
       }
 
       let manualIndexChange = false;
       const updateIndex = () => {
-        const value = receivedInput.value;
+        const value = letterDateInput.value;
         if (!value) return;
         const year = new Date(value).getFullYear();
         if (!Number.isFinite(year)) return;
@@ -186,12 +173,12 @@
       indexInput.addEventListener('input', () => {
         manualIndexChange = true;
       });
-      receivedInput.addEventListener('input', () => {
+      letterDateInput.addEventListener('input', () => {
         if (!manualIndexChange) {
           updateIndex();
         }
       });
-      receivedInput.addEventListener('change', () => {
+      letterDateInput.addEventListener('change', () => {
         if (!manualIndexChange) {
           updateIndex();
         }

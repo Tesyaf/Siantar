@@ -55,10 +55,6 @@
           </div>
 
           <div>
-            <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Tanggal Diterima</div>
-            <div class="font-bold text-gray-900">{{ optional($outgoingLetter->received_date)->format('d M Y') }}</div>
-          </div>
-          <div>
             <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Jenis Surat</div>
             <div class="font-bold text-gray-900">Surat Keluar</div>
           </div>
