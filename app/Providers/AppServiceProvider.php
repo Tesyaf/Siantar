@@ -31,14 +31,12 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme($_SERVER['HTTP_X_FORWARDED_PROTO']);
         }
 
-        // Force root URL from .env APP_URL
-        if ($appUrl = config('app.url')) {
-            URL::forceRootUrl($appUrl);
-        }
-
-        // Force HTTPS only for production environment
+        // Force HTTPS and root URL only for production environment
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
+            if ($appUrl = config('app.url')) {
+                URL::forceRootUrl($appUrl);
+            }
         }
 
         Storage::extend('google', function ($app, $config) {

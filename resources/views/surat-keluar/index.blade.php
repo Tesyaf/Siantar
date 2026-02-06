@@ -12,7 +12,8 @@
 
       @if (session('success'))
         <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm mb-4">
-          {{ session('success') }}</div>
+          {{ session('success') }}
+        </div>
       @endif
       @if (session('error'))
         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm mb-4">{{ session('error') }}
@@ -115,7 +116,8 @@
                   <td class="py-4 px-5 font-bold text-gray-900">{{ $letter->letter_number }}</td>
                   <td class="py-4 px-5 text-gray-500"
                     data-sort-value="{{ optional($letter->letter_date)->format('Y-m-d') }}">
-                    {{ optional($letter->letter_date)->format('d M Y') }}</td>
+                    {{ optional($letter->letter_date)->format('d M Y') }}
+                  </td>
                   <td class="py-4 px-5 text-gray-500">{{ $letter->recipient }}</td>
                   <td class="py-4 px-5 text-gray-600">{{ $letter->subject }}</td>
                   <td class="py-4 px-5 text-center">
@@ -174,10 +176,17 @@
           </div>
           <div class="flex items-center gap-1">
             {{-- Previous Button --}}
-            <a href="{{ $letters->previousPageUrl() ?? '#' }}"
-              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }} no-underline">
-              <i class="bi bi-chevron-left"></i>
-            </a>
+            @if ($letters->onFirstPage())
+              <span
+                class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 opacity-50 cursor-not-allowed">
+                <i class="bi bi-chevron-left"></i>
+              </span>
+            @else
+              <a href="?page={{ $letters->currentPage() - 1 }}{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}{{ request('month') ? '&month=' . urlencode(request('month')) : '' }}"
+                class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline">
+                <i class="bi bi-chevron-left"></i>
+              </a>
+            @endif
 
             {{-- Page Numbers --}}
             @php
@@ -198,7 +207,7 @@
 
             {{-- First page + ellipsis --}}
             @if ($start > 1)
-              <a href="{{ $letters->url(1) }}"
+              <a href="?page=1{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}{{ request('month') ? '&month=' . urlencode(request('month')) : '' }}"
                 class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">1</a>
               @if ($start > 2)
                 <span class="w-6 text-center text-gray-400">...</span>
@@ -211,7 +220,7 @@
                 <span
                   class="w-9 h-9 flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm">{{ $page }}</span>
               @else
-                <a href="{{ $letters->url($page) }}"
+                <a href="?page={{ $page }}{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}{{ request('month') ? '&month=' . urlencode(request('month')) : '' }}"
                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">{{ $page }}</a>
               @endif
             @endfor
@@ -221,18 +230,26 @@
               @if ($end < $lastPage - 1)
                 <span class="w-6 text-center text-gray-400">...</span>
               @endif
-              <a href="{{ $letters->url($lastPage) }}"
+              <a href="?page={{ $lastPage }}{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}{{ request('month') ? '&month=' . urlencode(request('month')) : '' }}"
                 class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline text-sm">{{ $lastPage }}</a>
             @endif
 
             {{-- Next Button --}}
-            <a href="{{ $letters->nextPageUrl() ?? '#' }}"
-              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition {{ $letters->hasMorePages() ? '' : 'opacity-50 pointer-events-none' }} no-underline">
-              <i class="bi bi-chevron-right"></i>
-            </a>
+            @if ($letters->hasMorePages())
+              <a href="?page={{ $letters->currentPage() + 1 }}{{ request('search') ? '&search=' . urlencode(request('search')) : '' }}{{ request('month') ? '&month=' . urlencode(request('month')) : '' }}"
+                class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-200 transition no-underline">
+                <i class="bi bi-chevron-right"></i>
+              </a>
+            @else
+              <span
+                class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 opacity-50 cursor-not-allowed">
+                <i class="bi bi-chevron-right"></i>
+              </span>
+            @endif
           </div>
         </div>
       </section>
+
 
     </main>
   </div>
